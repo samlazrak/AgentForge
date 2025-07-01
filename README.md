@@ -1,100 +1,98 @@
-# AgentForge
+# Agent Creator
 
-**An AI agent platform for research, web scraping, and data analysis**
+A toolkit for building specialized AI agents focused on research, web scraping, and data analysis. I built this because I got tired of switching between different tools for research projects - it handles the tedious parts of information gathering and analysis so you don't have to.
 
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![MLX](https://img.shields.io/badge/MLX-optimized-green.svg)](https://ml-explore.github.io/mlx/)
 [![Streamlit](https://img.shields.io/badge/Streamlit-web_app-red.svg)](https://streamlit.io/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-I built AgentForge because I got tired of switching between different tools for research, web scraping, and data analysis. It's a platform that brings together three AI agents that actually talk to each other and share data - something I wish existed when I was doing my research.
+## What It Does
 
-## What's Inside
+This is essentially three different tools rolled into one:
 
-**Three agents that work together:**
-- **Research Agent**: Searches the web, synthesizes information, and creates proper citations
-- **Web Scraper**: Extracts content from websites (both simple and complex ones)  
-- **Data Analyst**: Handles your data files and generates insights
+1. **Research Agent** - Takes a question, searches the web, reads through results, and writes up a summary with proper citations
+2. **Web Scraper** - Pulls content from websites (both simple and JavaScript-heavy ones) and organizes it
+3. **Data Analysis Agent** - Loads your data files, runs analysis, creates visualizations, and explains what it found
 
-**Built for real work:**
-- Works great on Apple Silicon (thanks to MLX optimization)
-- Clean web interface that doesn't make you want to pull your hair out
-- Handles scientific data formats like ATF files (because apparently that's important to some of you)
-- Actually generates readable reports and citations
+There's a web interface built with Streamlit that makes everything point-and-click, plus a Python API if you want to integrate it into your own code.
 
-## Why I Made This
+## Why This Exists
 
-I spent way too much time cobbling together different tools for research projects. Need to research a topic? Open five browser tabs. Want to scrape some websites? Fire up a separate script. Got data to analyze? Time for yet another tool. 
+I spent way too much time cobbling together different tools for research projects. Need to research a topic? Open five browser tabs. Want to scrape some websites? Fire up a separate script. Got data to analyze? Time for yet another tool.
 
-AgentForge puts it all in one place. The research agent can automatically use the web scraper to get deeper content, and you can feed that data straight into the analysis agent. It's the workflow I always wanted.
+Agent Creator puts it all in one place. The research agent can automatically use the web scraper to get deeper content, and you can feed that data straight into the analysis agent. It's the workflow I always wanted.
 
-## What Each Agent Does
+If you're working with electrophysiology data, it also handles ATF files (those weird formats from lab equipment that nothing else seems to read properly).
 
-### Research Agent
-Give it a topic and it'll research it properly:
-- Searches multiple sources and actually reads them
-- Synthesizes the information (no copy-paste nonsense)
-- Creates proper citations because your professor/boss cares about that
-- Outputs PDF reports and Jupyter notebooks
-- Can work with the web scraper for more thorough content extraction
+## Quick Start
 
-### Web Scraper  
-Handles websites like a human would:
-- Fast scraping for simple sites
-- Selenium-based scraping for the fancy JavaScript-heavy ones
-- Processes multiple URLs without breaking
-- Finds all the links and images on a page
-- Exports data however you want it
-
-### Data Analyst
-Takes your messy data and makes sense of it:
-- Handles all the usual formats (CSV, Excel, JSON, TSV)
-- **Also handles ATF files** (for all you electrophysiology folks)
-- Creates charts that actually look good
-- Runs statistical tests and explains what they mean
-- Generates insights using AI (and they're usually pretty good)
-- Tells you when your data is garbage
-
-## Getting Started
-
-**Install it:**
 ```bash
-git clone https://github.com/yourusername/agentforge.git
-cd agentforge
+git clone https://github.com/yourusername/agent-creator.git
+cd agent-creator
 pip install -r requirements.txt
-```
-
-**Run it:**
-```bash
 streamlit run app.py
 ```
-Then go to `http://localhost:8501` and start playing around.
 
-**Use it from Python:**
+Open your browser to `http://localhost:8501` and you're ready to go.
+
+## Using the Agents
+
+### Research Agent
+
 ```python
-from agent_creator import ResearchAgent, DataAnalysisAgent
+from agent_creator import ResearchAgent
 
-# Research something
-research_agent = ResearchAgent()
-research_agent.start()
+agent = ResearchAgent()
+agent.start()
 
-result = research_agent.research_topic(
-    query="What's new in AI healthcare applications",
+result = agent.research_topic(
+    query="What's new in AI for drug discovery?",
     max_results=10,
     generate_pdf=True
 )
-
-# Analyze some data  
-data_agent = DataAnalysisAgent()
-data_agent.start()
-
-analysis = data_agent.analyze_file("my_data.csv", analysis_type="comprehensive")
-print(f"Found {len(analysis.insights)} interesting things in your data")
 ```
 
-## The Web Interface
+This will search multiple sources, read through them, and give you a coherent summary with citations. You can get the results as text, PDF, or Jupyter notebook.
 
-I tried to make this actually usable:
+### Web Scraper
+
+```python
+from agent_creator import WebscraperAgent
+
+agent = WebscraperAgent()
+agent.start()
+
+# Scrape a single page
+result = agent.scrape_url("https://example.com")
+
+# Or scrape multiple pages
+urls = ["https://site1.com", "https://site2.com"]
+results = agent.scrape_multiple_urls(urls)
+```
+
+It handles both simple pages and JavaScript-heavy sites (using Selenium when needed). You can extract just text, get all the links, or pull out images and other media.
+
+### Data Analysis Agent
+
+```python
+from agent_creator import DataAnalysisAgent
+
+agent = DataAnalysisAgent()
+agent.start()
+
+# Analyze any data file
+analysis = agent.analyze_file("your_data.csv")
+
+# Works with Excel, JSON, CSV, TSV, and ATF files
+analysis = agent.analyze_file("lab_recording.atf")
+```
+
+It'll figure out what kind of data you have, create appropriate visualizations, run statistical tests, and explain what the results mean in plain English.
+
+## Web Interface
+
+The Streamlit interface has three tabs that mirror the three agents:
 
 **Research Tab**: Type in what you want to research, configure how deep you want to go, watch it work in real-time
 
@@ -102,54 +100,61 @@ I tried to make this actually usable:
 
 **Data Analysis Tab**: Drop in your data files, get instant insights, play with interactive charts
 
-## Data Formats I Support
+The interface shows progress in real-time, so you can see what's happening when the agents are working through large tasks.
 
-| Format | Why You'd Use It |
-|--------|------------------|
-| **CSV** | Because everything ends up as CSV eventually |
-| **Excel** | For when your boss insists on spreadsheets |
-| **JSON** | API data and modern web stuff |
-| **TSV** | Scientific data that's too good for commas |
-| **ATF** | Electrophysiology recordings (yes, really) |
+## File Format Support
 
-### ATF Files (For the Scientists)
-If you work with electrophysiology data, you know ATF files are a pain. AgentForge handles them properly:
+**Standard formats**: CSV, Excel (.xlsx/.xls), JSON, TSV
+
+**ATF files**: These are common in neuroscience labs for electrophysiology recordings. Most tools can't read them properly, but this handles the metadata and multiple data columns correctly. If you work with electrophysiology data, you know ATF files are a pain - Agent Creator handles them properly:
 - Keeps all your experimental metadata intact
 - Figures out the file structure automatically
 - Makes time-series plots that don't look terrible
 - Plays nice with your other analysis tools
 
-## How It's Built
+## Performance Notes
+
+If you're on Apple Silicon (M1/M2/M3), the MLX optimization makes AI inference 3-5x faster. On other hardware, it falls back to standard methods automatically.
+
+The web scraper includes rate limiting so you don't hammer servers, and the data analysis can handle reasonably large files without running out of memory.
+
+## Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                        AgentForge                           │
-├─────────────────────────────────────────────────────────────┤
-│                  Streamlit Web Interface                    │
-│   Research Tab  │  Webscraper Tab  │  Data Analysis Tab    │
-├─────────────────────────────────────────────────────────────┤
-│                     The Three Agents                       │
-│  🔬 Research    │  🕷️ Web Scraper   │  📊 Data Analyst    │
-├─────────────────────────────────────────────────────────────┤
-│                    Core Stuff                              │
-│  BaseAgent  │  Config  │  Task Manager  │  LLM Interface   │
-├─────────────────────────────────────────────────────────────┤
-│                   The Tools                                │
-│  MLX/HuggingFace │ DuckDuckGo │ Selenium │ Pandas/Matplotlib │
-└─────────────────────────────────────────────────────────────┘
+Web Interface (Streamlit)
+├── Research Tab
+├── Web Scraping Tab
+└── Data Analysis Tab
+
+Agent Layer
+├── ResearchAgent
+├── WebscraperAgent
+└── DataAnalysisAgent
+
+Core Components
+├── BaseAgent (shared functionality)
+├── LLMInterface (AI model handling)
+└── Various utilities
+
+External Dependencies
+├── MLX (Apple Silicon optimization)
+├── HuggingFace Transformers
+├── Selenium (for complex sites)
+└── Standard data science stack
 ```
 
-## Who This Is For
+## Common Use Cases
 
-**Researchers**: Literature reviews, data analysis, citation management
-**Business folks**: Market research, competitive analysis, data insights
-**Scientists**: Lab data processing, especially electrophysiology 
-**Data people**: Quick exploratory analysis, statistical testing, visualization
+**Research**: Literature reviews, competitive analysis, fact-checking - the research agent is particularly useful for academic work since it generates proper citations
+
+**Web Scraping**: Content migration, price monitoring, data collection - handles both simple and complex JavaScript-heavy sites
+
+**Data Analysis**: Exploratory analysis, report generation, statistical testing - works well for lab data since it understands scientific file formats and creates publication-ready plots
 
 ## What's Under the Hood
 
 **AI stuff:**
-- MLX for Apple Silicon (makes everything 3-5x faster if you have an M1/M2/M3)
+- MLX for Apple Silicon (makes everything faster if you have an M1/M2/M3)
 - HuggingFace transformers for the language models
 - Pandas and friends for data wrangling
 
@@ -209,6 +214,15 @@ for insight in result.insights:
     print(f"• {insight}")
 ```
 
+## Installation Details
+
+Core requirements:
+- Python 3.8+
+- About 2GB of dependencies (mostly for the AI models)
+- Optional: MLX for Apple Silicon optimization
+
+Full dependency list is in `requirements.txt`. The setup script (`setup.sh`) handles some of the trickier installations if you run into issues.
+
 ## Testing
 
 ```bash
@@ -228,8 +242,8 @@ pytest --cov=agent_creator tests/
 
 **Local setup:**
 ```bash
-git clone https://github.com/yourusername/agentforge.git
-cd agentforge
+git clone https://github.com/yourusername/agent-creator.git
+cd agent-creator
 pip install -e .
 streamlit run app.py
 ```
@@ -244,6 +258,10 @@ streamlit run app.py --server.headless true
 
 ## Contributing
 
+The codebase is pretty straightforward - each agent is in its own file, with shared functionality in the core module. Tests are in the `tests/` directory and documentation is in `docs/`.
+
+If you want to add a new agent, extend the `BaseAgent` class and follow the same pattern as the existing ones. The Streamlit interface automatically picks up new agents if you follow the naming conventions.
+
 I'd love help making this better. Here's how:
 
 1. Fork the repo
@@ -254,30 +272,30 @@ I'd love help making this better. Here's how:
 
 **Development setup:**
 ```bash
-git clone https://github.com/yourusername/agentforge.git
-cd agentforge
+git clone https://github.com/yourusername/agent-creator.git
+cd agent-creator
 pip install -e .
 pip install pytest pytest-asyncio pytest-mock pytest-cov
 ```
 
 Please write tests for new features and follow Python conventions. Documentation updates are always welcome too.
 
-## What's Next
+## Known Issues
 
-**Version 1.1.0:**
-- REST API for programmatic access
-- Docker container for easier deployment
-- Better visualizations
-- User accounts and project management
+- Selenium can be finicky on some systems (check the docs for troubleshooting)
+- Very large data files (>1GB) might run into memory limits
+- Some websites actively block scraping (this is expected behavior)
 
-**Future plans:**
-- Plugin system for custom agents
-- Cloud deployment options
-- More integrations with data platforms
+## Documentation
+
+- `docs/GETTING_STARTED.md` - More detailed setup instructions
+- `docs/API_REFERENCE.md` - Complete function documentation
+- `docs/EXAMPLES.md` - More code examples and use cases
+- `docs/ARCHITECTURE.md` - How everything fits together
 
 ## License
 
-MIT License - do whatever you want with it, just don't blame me if something breaks.
+MIT License - use it however you want, just include the license file.
 
 ## Thanks
 
@@ -298,6 +316,8 @@ If this helps with your work, give it a star ⭐ and maybe tell a colleague abou
 
 ---
 
-**AgentForge** - *Because switching between tools is annoying*
+This started as a personal project to automate my own research workflow. If it's useful to you, great! If you find bugs or have ideas for improvements, pull requests are welcome.
+
+**Agent Creator** - *Because switching between tools is annoying*
 
 [Get Started](docs/GETTING_STARTED.md) • [Documentation](docs/) • [Contribute](#contributing)
