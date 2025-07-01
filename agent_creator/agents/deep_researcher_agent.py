@@ -9,6 +9,7 @@ from datetime import datetime
 from dataclasses import dataclass, field
 import logging
 from urllib.parse import urlparse, urljoin
+import time
 
 try:
     import pdfplumber
@@ -41,15 +42,30 @@ class ScrapedContent:
     error: Optional[str] = None
 
 @dataclass
+class ScrapingConfig:
+    """Configuration for multi-level scraping"""
+    max_depth: int = 1
+    max_links_per_level: int = 5
+    max_total_links: int = 50
+    delay_between_requests: float = 1.0
+    respect_robots_txt: bool = True
+    relevance_threshold: float = 0.3
+    allowed_domains: List[str] = field(default_factory=list)
+    blocked_domains: List[str] = field(default_factory=list)
+
+@dataclass
 class DeepResearchResult:
     """Represents the complete deep research result"""
     source_pdf: str
     extracted_links: List[ExtractedLink] = field(default_factory=list)
     scraped_content: List[ScrapedContent] = field(default_factory=list)
+    link_network: Dict[str, List[str]] = field(default_factory=dict)  # Maps parent URL to child URLs
+    scraping_stats: Dict[str, Any] = field(default_factory=dict)
     summary: str = ""
     timestamp: datetime = field(default_factory=datetime.now)
     total_links_found: int = 0
     successful_scrapes: int = 0
+    max_depth_reached: int = 0
 
 class DeepResearcherAgent(BaseAgent):
     """
@@ -57,12 +73,13 @@ class DeepResearcherAgent(BaseAgent):
     and scraping content from those links
     """
     
-    def __init__(self, config: Optional[AgentConfig] = None):
+    def __init__(self, config: Optional[AgentConfig] = None, scraping_config: Optional[ScrapingConfig] = None):
         """
         Initialize the deep researcher agent
         
         Args:
             config: Agent configuration
+            scraping_config: Multi-level scraping configuration
         """
         if config is None:
             config = AgentConfig(
@@ -73,12 +90,17 @@ class DeepResearcherAgent(BaseAgent):
                     "content_scraping",
                     "content_filtering",
                     "deep_analysis",
-                    "link_validation"
+                    "link_validation",
+                    "multi_level_scraping",
+                    "network_analysis"
                 ]
             )
         
         super().__init__(config)
         self.webscraper_agent = None
+        self.scraping_config = scraping_config or ScrapingConfig()
+        self.scraped_urls = set()  # Track scraped URLs to avoid duplicates
+        self.url_relevance_cache = {}  # Cache relevance scores
         
     def _initialize(self):
         """Initialize deep researcher specific components"""
@@ -137,6 +159,8 @@ class DeepResearcherAgent(BaseAgent):
         max_links = task.parameters.get("max_links", 10)
         filter_domains = task.parameters.get("filter_domains", [])
         include_images = task.parameters.get("include_images", True)
+        max_depth = task.parameters.get("max_depth", self.scraping_config.max_depth)
+        use_multi_level = task.parameters.get("use_multi_level", True)
         
         if not pdf_path:
             raise ValueError("pdf_path parameter is required")
@@ -145,6 +169,7 @@ class DeepResearcherAgent(BaseAgent):
             raise FileNotFoundError(f"PDF file not found: {pdf_path}")
         
         self.logger.info(f"Starting deep research on PDF: {pdf_path}")
+        self.logger.info(f"Multi-level scraping: {use_multi_level}, Max depth: {max_depth}")
         
         # Step 1: Extract links from PDF
         extracted_links = self._extract_links_from_pdf_file(pdf_path, max_links)
@@ -153,23 +178,37 @@ class DeepResearcherAgent(BaseAgent):
         if filter_domains:
             extracted_links = self._filter_links_by_domain(extracted_links, filter_domains)
         
-        # Step 3: Scrape content from links
-        scraped_content = self._scrape_content_from_links(extracted_links, include_images)
+        # Step 3: Scrape content from links (with optional multi-level)
+        if use_multi_level and max_depth > 1:
+            scraped_content, link_network, scraping_stats = self._perform_multi_level_scraping(
+                extracted_links, max_depth
+            )
+        else:
+            scraped_content = self._scrape_content_from_links(extracted_links, include_images)
+            link_network = {}
+            scraping_stats = {
+                'total_urls_discovered': len(extracted_links),
+                'total_urls_scraped': len([c for c in scraped_content if c.success]),
+                'max_depth_reached': 1
+            }
         
-        # Step 4: Generate summary
+        # Step 4: Generate enhanced summary
         summary = self._generate_research_summary(extracted_links, scraped_content)
         
         result = DeepResearchResult(
             source_pdf=pdf_path,
             extracted_links=extracted_links,
             scraped_content=scraped_content,
+            link_network=link_network,
+            scraping_stats=scraping_stats,
             summary=summary,
             total_links_found=len(extracted_links),
-            successful_scrapes=len([c for c in scraped_content if c.success])
+            successful_scrapes=len([c for c in scraped_content if c.success]),
+            max_depth_reached=scraping_stats.get('max_depth_reached', 1)
         )
         
-        self.logger.info(f"Deep research completed. Found {result.total_links_found} links, "
-                        f"successfully scraped {result.successful_scrapes} sites")
+        self.logger.info(f"Deep research completed. Found {result.total_links_found} initial links, "
+                        f"scraped {result.successful_scrapes} total pages across {result.max_depth_reached} levels")
         
         return result
     
@@ -484,6 +523,221 @@ class DeepResearcherAgent(BaseAgent):
         
         return cleaned_text
     
+    def _perform_multi_level_scraping(self, initial_links: List[ExtractedLink], 
+                                     max_depth: int = None) -> Tuple[List[ScrapedContent], Dict[str, List[str]], Dict[str, Any]]:
+        """
+        Perform multi-level recursive scraping
+        
+        Args:
+            initial_links: Starting links from PDF
+            max_depth: Maximum depth to scrape (overrides config)
+            
+        Returns:
+            Tuple of (all_scraped_content, link_network, stats)
+        """
+        max_depth = max_depth or self.scraping_config.max_depth
+        link_network = {}
+        all_scraped_content = []
+        current_depth = 0
+        urls_to_scrape = [(link.url, 0) for link in initial_links]  # (url, depth)
+        
+        stats = {
+            'total_urls_discovered': 0,
+            'total_urls_scraped': 0,
+            'urls_per_depth': {},
+            'failed_scrapes': 0,
+            'duplicate_urls_skipped': 0,
+            'relevance_filtered': 0
+        }
+        
+        while urls_to_scrape and current_depth <= max_depth:
+            current_level_urls = [(url, depth) for url, depth in urls_to_scrape if depth == current_depth]
+            if not current_level_urls:
+                current_depth += 1
+                continue
+                
+            stats['urls_per_depth'][current_depth] = len(current_level_urls)
+            self.logger.info(f"Scraping depth {current_depth}: {len(current_level_urls)} URLs")
+            
+            for url, depth in current_level_urls:
+                if url in self.scraped_urls:
+                    stats['duplicate_urls_skipped'] += 1
+                    continue
+                    
+                if len(all_scraped_content) >= self.scraping_config.max_total_links:
+                    self.logger.info("Reached maximum total links limit")
+                    break
+                    
+                # Check relevance
+                if not self._is_url_relevant(url, initial_links):
+                    stats['relevance_filtered'] += 1
+                    continue
+                
+                # Scrape the URL
+                scraped_result = self._scrape_single_url_with_links(url)
+                if scraped_result:
+                    all_scraped_content.append(scraped_result)
+                    self.scraped_urls.add(url)
+                    stats['total_urls_scraped'] += 1
+                    
+                    # Extract links for next level
+                    if depth < max_depth and scraped_result.success:
+                        child_links = self._extract_relevant_child_links(scraped_result, url)
+                        if child_links:
+                            link_network[url] = child_links
+                            # Add to queue for next depth
+                            for child_url in child_links[:self.scraping_config.max_links_per_level]:
+                                if child_url not in self.scraped_urls:
+                                    urls_to_scrape.append((child_url, depth + 1))
+                                    stats['total_urls_discovered'] += 1
+                else:
+                    stats['failed_scrapes'] += 1
+                
+                # Respect rate limiting
+                time.sleep(self.scraping_config.delay_between_requests)
+            
+            current_depth += 1
+        
+        stats['max_depth_reached'] = current_depth - 1
+        return all_scraped_content, link_network, stats
+    
+    def _scrape_single_url_with_links(self, url: str) -> Optional[ScrapedContent]:
+        """
+        Scrape a single URL and extract its links
+        
+        Args:
+            url: URL to scrape
+            
+        Returns:
+            ScrapedContent with extracted links
+        """
+        if not self.webscraper_agent:
+            self.logger.warning("No webscraper agent available")
+            return None
+            
+        try:
+            self.logger.info(f"Scraping: {url}")
+            scraping_result = self.webscraper_agent.scrape_url(url)
+            
+            if scraping_result.success:
+                clean_text = self._filter_and_clean_content(scraping_result.text)
+                
+                return ScrapedContent(
+                    url=url,
+                    title=scraping_result.title,
+                    clean_text=clean_text,
+                    images=scraping_result.images,
+                    links=scraping_result.links or [],
+                    metadata=scraping_result.metadata,
+                    success=True
+                )
+            else:
+                return ScrapedContent(
+                    url=url,
+                    success=False,
+                    error=scraping_result.error
+                )
+                
+        except Exception as e:
+            self.logger.error(f"Error scraping {url}: {e}")
+            return ScrapedContent(
+                url=url,
+                success=False,
+                error=str(e)
+            )
+    
+    def _extract_relevant_child_links(self, scraped_content: ScrapedContent, parent_url: str) -> List[str]:
+        """
+        Extract relevant child links from scraped content
+        
+        Args:
+            scraped_content: Content that was scraped
+            parent_url: URL that was scraped
+            
+        Returns:
+            List of relevant child URLs
+        """
+        if not scraped_content.links:
+            return []
+        
+        relevant_links = []
+        parent_domain = urlparse(parent_url).netloc
+        
+        for link in scraped_content.links:
+            try:
+                parsed_link = urlparse(link)
+                
+                # Skip non-HTTP links
+                if parsed_link.scheme not in ['http', 'https']:
+                    continue
+                
+                # Apply domain filtering
+                link_domain = parsed_link.netloc
+                
+                # Skip if in blocked domains
+                if any(blocked in link_domain for blocked in self.scraping_config.blocked_domains):
+                    continue
+                
+                # If allowed domains specified, only include those
+                if self.scraping_config.allowed_domains:
+                    if not any(allowed in link_domain for allowed in self.scraping_config.allowed_domains):
+                        continue
+                
+                # Prefer same domain links for relevance
+                if link_domain == parent_domain:
+                    relevant_links.append(link)
+                elif len(relevant_links) < self.scraping_config.max_links_per_level // 2:
+                    # Allow some cross-domain links
+                    relevant_links.append(link)
+                
+                if len(relevant_links) >= self.scraping_config.max_links_per_level:
+                    break
+                    
+            except Exception as e:
+                self.logger.warning(f"Error processing link {link}: {e}")
+                continue
+        
+        return relevant_links
+    
+    def _is_url_relevant(self, url: str, initial_links: List[ExtractedLink]) -> bool:
+        """
+        Check if a URL is relevant to the research topic
+        
+        Args:
+            url: URL to check
+            initial_links: Original links from PDF for context
+            
+        Returns:
+            True if URL appears relevant
+        """
+        if url in self.url_relevance_cache:
+            return self.url_relevance_cache[url]
+        
+        # Simple relevance heuristics
+        url_lower = url.lower()
+        
+        # Check if URL contains relevant keywords
+        relevant_keywords = [
+            'ai', 'artificial-intelligence', 'machine-learning', 'software-development',
+            'programming', 'coding', 'developer', 'engineer', 'technology', 'tech',
+            'automation', 'agent', 'chatgpt', 'llm', 'generative', 'neural', 'algorithm'
+        ]
+        
+        keyword_score = sum(1 for keyword in relevant_keywords if keyword in url_lower)
+        
+        # Check domain similarity to initial links
+        url_domain = urlparse(url).netloc
+        initial_domains = {urlparse(link.url).netloc for link in initial_links}
+        domain_similarity = 1.0 if url_domain in initial_domains else 0.0
+        
+        # Calculate relevance score
+        relevance_score = (keyword_score * 0.3) + (domain_similarity * 0.7)
+        
+        is_relevant = relevance_score >= self.scraping_config.relevance_threshold
+        self.url_relevance_cache[url] = is_relevant
+        
+        return is_relevant
+    
     def _generate_research_summary(self, links: List[ExtractedLink], content: List[ScrapedContent]) -> str:
         """
         Generate a summary of the research results
@@ -624,15 +878,17 @@ class DeepResearcherAgent(BaseAgent):
         return self.run_task(task_id)
     
     def deep_research(self, pdf_path: str, max_links: int = 10, filter_domains: List[str] = None, 
-                     include_images: bool = True) -> DeepResearchResult:
+                     include_images: bool = True, max_depth: int = 1, use_multi_level: bool = False) -> DeepResearchResult:
         """
         Convenience method to perform complete deep research
         
         Args:
             pdf_path: Path to PDF file
-            max_links: Maximum number of links to extract
+            max_links: Maximum number of links to extract from PDF
             filter_domains: Optional list of domains to filter by
             include_images: Whether to include images in scraping
+            max_depth: Maximum depth for multi-level scraping (1 = single level)
+            use_multi_level: Whether to enable multi-level recursive scraping
             
         Returns:
             Complete deep research result
@@ -642,6 +898,8 @@ class DeepResearcherAgent(BaseAgent):
             "pdf_path": pdf_path,
             "max_links": max_links,
             "filter_domains": filter_domains or [],
-            "include_images": include_images
+            "include_images": include_images,
+            "max_depth": max_depth,
+            "use_multi_level": use_multi_level
         })
         return self.run_task(task_id)
