@@ -1,37 +1,87 @@
-# Agent Creator
+# Deep Research System
 
-A toolkit for building specialized AI agents focused on research, web scraping, and data analysis. I built this because I got tired of switching between different tools for research projects - it handles the tedious parts of information gathering and analysis so you don't have to.
+A focused, production-ready deep research tool that performs comprehensive web research using DuckDuckGo search and recursive web crawling.
 
-[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
-[![MLX](https://img.shields.io/badge/MLX-optimized-green.svg)](https://ml-explore.github.io/mlx/)
-[![Streamlit](https://img.shields.io/badge/Streamlit-web_app-red.svg)](https://streamlit.io/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+## 🔍 What It Does
 
-## What It Does
+This system takes a research query and performs deep, multi-level web research:
 
-This is essentially three different tools rolled into one:
+1. **Initial Search**: Searches DuckDuckGo for relevant results
+2. **Level 1 Crawling**: Scrapes content from initial search results
+3. **Level 2 Recursive Crawling**: Follows links from initial pages and crawls them recursively
+4. **Content Analysis**: Analyzes all content for relevance to your research query
+5. **Report Generation**: Creates comprehensive reports in both web interface and PDF format
 
-1. **Research Agent** - Takes a question, searches the web, reads through results, and writes up a summary with proper citations
-2. **Web Scraper** - Pulls content from websites (both simple and JavaScript-heavy ones) and organizes it
-3. **Data Analysis Agent** - Loads your data files, runs analysis, creates visualizations, and explains what it found
+## 🚀 Quick Start
 
-There's a web interface built with Streamlit that makes everything point-and-click, plus a Python API if you want to integrate it into your own code.
+### Installation
+```bash
+# Install dependencies
+pip install -r requirements.txt
+```
 
-## Web Interface
+### Run the Web Application
+```bash
+# Start the Streamlit web interface
+streamlit run app.py
+```
 
-The Streamlit interface has three tabs that mirror the three agents. Upload files by dragging and dropping, enter URLs or search queries, and everything runs in the browser. Results can be downloaded in various formats.
+The web interface will be available at `http://localhost:8501`
 
-The interface shows progress in real-time, so you can see what's happening when the agents are working through large tasks.
+### Run Tests
+```bash
+# Test the core functionality
+python3 test_research.py
+```
 
-## File Format Support
+## 📋 Features
 
-- **Standard formats**: CSV, Excel (.xlsx/.xls), JSON, TSV
-- **ATF files**: These are common in neuroscience labs for electrophysiology recordings. Most tools can't read them properly, but this handles the metadata and multiple data columns correctly.
+- **DuckDuckGo Integration**: Searches the web without API keys
+- **Multi-Level Crawling**: Goes beyond surface-level results
+- **Content Relevance Scoring**: Analyzes how relevant each page is to your query
+- **PDF Report Generation**: Creates professional research reports
+- **Real-time Progress Tracking**: See the research progress as it happens
+- **Error Handling**: Robust handling of failed requests and timeouts
+- **Research History**: Keep track of past research queries
 
-## Performance Notes
+## 🖥️ Web Interface
 
-If you're on Apple Silicon (M1/M2/M3), the MLX optimization makes AI inference significantly faster. On other hardware, it falls back to standard methods automatically.
+The Streamlit interface provides:
+- Clean, modern design with intuitive controls
+- Real-time progress bars and status updates
+- Comprehensive results display with metrics
+- Research summary and key findings
+- Expandable source previews with relevance scores
+- PDF download functionality
+- Research history sidebar
 
-The web scraper includes rate limiting so you don't hammer servers, and the data analysis can handle reasonably large files without running out of memory.
+## 🔧 Core Components
 
-## Architecture
+- **`deep_researcher.py`** (604 lines): Core research engine with web crawling, content analysis, and report generation
+- **`app.py`** (393 lines): Streamlit web interface with modern UI and real-time updates
+- **`test_research.py`** (165 lines): Comprehensive testing script for verification
+
+## 📊 Example Output
+
+A typical research session will:
+- Find 5-20 initial search results
+- Crawl 10-50 pages across two levels
+- Generate relevance scores for all content
+- Create a comprehensive PDF report
+- Complete in 30-120 seconds depending on query complexity
+
+## 🛠️ Dependencies
+
+Key libraries used:
+- **Web Scraping**: `duckduckgo-search`, `requests`, `beautifulsoup4`
+- **PDF Generation**: `reportlab`
+- **Web Interface**: `streamlit`
+- **Content Analysis**: Built-in relevance scoring system
+
+## 📄 License
+
+MIT License - Feel free to use this system for your research needs.
+
+---
+
+*This system was built to provide deep, comprehensive web research capabilities with a focus on simplicity, reliability, and production readiness.*
