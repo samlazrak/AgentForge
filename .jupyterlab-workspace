@@ -1,0 +1,36 @@
+{
+  "data": {
+    "layout-restorer:data": {
+      "main": {
+        "dock": {
+          "type": "tab-area",
+          "currentIndex": 0,
+          "widgets": [
+            "notebook:demo_notebook.ipynb"
+          ]
+        },
+        "mode": "multiple-document"
+      },
+      "left": {
+        "collapsed": false,
+        "widgets": [
+          "filebrowser" 
+        ]
+      },
+      "right": {
+        "collapsed": true,
+        "widgets": []
+      }
+    },
+    "notebook:demo_notebook.ipynb": {
+      "factory": "Notebook",
+      "path": "demo_notebook.ipynb",
+      "kernel": {
+        "name": "python3"
+      }
+    }
+  },
+  "metadata": {
+    "id": "agent-creator-workspace"
+  }
+} 

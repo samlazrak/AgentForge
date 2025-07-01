@@ -36,64 +36,480 @@ st.set_page_config(
 # Custom CSS for beautiful styling
 st.markdown("""
 <style>
+    /* Import Google Fonts */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+    
+    /* Root variables for consistent theming */
+    :root {
+        --primary-color: #6366f1;
+        --primary-hover: #5856e4;
+        --secondary-color: #06b6d4;
+        --accent-color: #f59e0b;
+        --success-color: #10b981;
+        --warning-color: #f59e0b;
+        --error-color: #ef4444;
+        --background-primary: #1e293b;
+        --background-secondary: #334155;
+        --background-tertiary: #475569;
+        --background-card: #2d3748;
+        --background-soft: #374151;
+        --text-primary: #f1f5f9;
+        --text-secondary: #cbd5e1;
+        --border-color: #475569;
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+        --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+        --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --gradient-secondary: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+        --gradient-accent: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    }
+    
+    /* Global styles */
+    .main > div {
+        padding: 2rem 1rem;
+        font-family: 'Inter', sans-serif;
+    }
+    
+    /* Hide default Streamlit elements */
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    header {visibility: hidden;}
+    
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+    
+    ::-webkit-scrollbar-track {
+        background: var(--background-tertiary);
+        border-radius: 4px;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+        background: var(--primary-color);
+        border-radius: 4px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--primary-hover);
+    }
+    
+    /* Main header styling */
     .main-header {
-        font-size: 3rem;
-        font-weight: bold;
-        color: #1e3a8a;
+        font-size: clamp(2.5rem, 5vw, 4rem);
+        font-weight: 700;
+        color: transparent;
         text-align: center;
-        margin-bottom: 2rem;
-        background: linear-gradient(90deg, #1e3a8a, #3b82f6);
+        margin: 0 0 1rem 0;
+        background: var(--gradient-primary);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
+        background-clip: text;
+        letter-spacing: -0.025em;
+        line-height: 1.1;
+        position: relative;
+    }
+    
+    .main-header::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 4px;
+        background: var(--gradient-secondary);
+        border-radius: 2px;
     }
     
     .sub-header {
-        font-size: 1.5rem;
-        color: #374151;
+        font-size: 1.25rem;
+        color: var(--text-secondary);
         text-align: center;
         margin-bottom: 3rem;
+        font-weight: 400;
+        line-height: 1.6;
     }
     
-    .agent-card {
-        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-        padding: 2rem;
-        border-radius: 1rem;
-        border: 1px solid #e2e8f0;
-        margin: 1rem 0;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+         /* Enhanced sidebar styling */
+     .css-1d391kg {
+         background: linear-gradient(180deg, #1e293b 0%, #334155 100%);
+         border-right: 1px solid var(--border-color);
+     }
+     
+     .sidebar .sidebar-content {
+         padding: 2rem 1rem;
+     }
+    
+         /* Card components */
+     .agent-card {
+         background: var(--background-card);
+         padding: 2rem;
+         border-radius: 16px;
+         border: 1px solid var(--border-color);
+         margin: 1rem 0;
+         box-shadow: var(--shadow-lg);
+         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+         position: relative;
+         overflow: hidden;
+     }
+    
+    .agent-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--gradient-primary);
     }
     
+    .agent-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-xl);
+        border-color: var(--primary-color);
+    }
+    
+    /* Feature boxes */
     .feature-box {
-        background: #f1f5f9;
-        padding: 1rem;
-        border-radius: 0.5rem;
-        border-left: 4px solid #3b82f6;
-        margin: 0.5rem 0;
+        background: var(--background-secondary);
+        padding: 1.5rem;
+        border-radius: 12px;
+        border-left: 4px solid var(--primary-color);
+        margin: 1rem 0;
+        transition: all 0.3s ease;
+        position: relative;
     }
     
+         .feature-box:hover {
+         background: var(--background-card);
+         box-shadow: var(--shadow-md);
+         transform: translateX(4px);
+     }
+    
+    /* Status indicators */
     .status-success {
-        background: #dcfce7;
-        color: #166534;
-        padding: 0.5rem 1rem;
-        border-radius: 0.5rem;
+        background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+        color: var(--success-color);
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
         border: 1px solid #bbf7d0;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin: 0.5rem 0;
+        box-shadow: var(--shadow-sm);
     }
     
     .status-error {
-        background: #fef2f2;
-        color: #dc2626;
-        padding: 0.5rem 1rem;
-        border-radius: 0.5rem;
+        background: linear-gradient(135deg, #fef2f2 0%, #fecaca 100%);
+        color: var(--error-color);
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
         border: 1px solid #fecaca;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin: 0.5rem 0;
+        box-shadow: var(--shadow-sm);
     }
     
-    .metric-card {
-        background: white;
-        padding: 1rem;
-        border-radius: 0.5rem;
-        border: 1px solid #e5e7eb;
-        text-align: center;
+         /* Metric cards */
+     .metric-card {
+         background: var(--background-card);
+         padding: 1.5rem;
+         border-radius: 12px;
+         border: 1px solid var(--border-color);
+         text-align: center;
+         box-shadow: var(--shadow-md);
+         transition: all 0.3s ease;
+         position: relative;
+         overflow: hidden;
+     }
+    
+    .metric-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: var(--gradient-secondary);
     }
+    
+    .metric-card:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+    }
+    
+    /* Enhanced buttons */
+    .stButton > button {
+        background: var(--gradient-primary) !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 8px !important;
+        padding: 0.75rem 1.5rem !important;
+        font-weight: 500 !important;
+        font-family: 'Inter', sans-serif !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        box-shadow: var(--shadow-md) !important;
+        letter-spacing: 0.025em !important;
+    }
+    
+    .stButton > button:hover {
+        transform: translateY(-2px) !important;
+        box-shadow: var(--shadow-lg) !important;
+        background: var(--gradient-accent) !important;
+    }
+    
+    .stButton > button:active {
+        transform: translateY(0) !important;
+    }
+    
+    /* Enhanced inputs */
+         .stTextInput > div > div > input {
+         border: 2px solid var(--border-color) !important;
+         border-radius: 8px !important;
+         padding: 0.75rem !important;
+         font-family: 'Inter', sans-serif !important;
+         transition: all 0.3s ease !important;
+         background: var(--background-card) !important;
+     }
+    
+    .stTextInput > div > div > input:focus {
+        border-color: var(--primary-color) !important;
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1) !important;
+        outline: none !important;
+    }
+    
+         .stTextArea > div > div > textarea {
+         border: 2px solid var(--border-color) !important;
+         border-radius: 8px !important;
+         padding: 0.75rem !important;
+         font-family: 'Inter', sans-serif !important;
+         transition: all 0.3s ease !important;
+         background: var(--background-card) !important;
+     }
+    
+    .stTextArea > div > div > textarea:focus {
+        border-color: var(--primary-color) !important;
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1) !important;
+        outline: none !important;
+    }
+    
+    /* Enhanced tabs */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 8px;
+        background: var(--background-secondary);
+        padding: 0.5rem;
+        border-radius: 12px;
+        border: 1px solid var(--border-color);
+    }
+    
+    .stTabs [data-baseweb="tab"] {
+        height: 3rem;
+        white-space: pre-wrap;
+        background: transparent;
+        border-radius: 8px;
+        color: var(--text-secondary);
+        font-weight: 500;
+        font-family: 'Inter', sans-serif;
+        transition: all 0.3s ease;
+        border: none;
+    }
+    
+         .stTabs [aria-selected="true"] {
+         background: var(--background-card) !important;
+         color: var(--primary-color) !important;
+         box-shadow: var(--shadow-sm);
+     }
+    
+    /* Enhanced expanders */
+    .streamlit-expanderHeader {
+        background: var(--background-secondary) !important;
+        border-radius: 8px !important;
+        border: 1px solid var(--border-color) !important;
+        font-weight: 500 !important;
+        transition: all 0.3s ease !important;
+    }
+    
+         .streamlit-expanderHeader:hover {
+         background: var(--background-card) !important;
+         box-shadow: var(--shadow-sm) !important;
+     }
+    
+         .streamlit-expanderContent {
+         background: var(--background-card) !important;
+         border: 1px solid var(--border-color) !important;
+         border-top: none !important;
+         border-radius: 0 0 8px 8px !important;
+     }
+    
+         /* Enhanced metrics */
+     [data-testid="metric-container"] {
+         background: var(--background-card);
+         border: 1px solid var(--border-color);
+         padding: 1rem;
+         border-radius: 8px;
+         box-shadow: var(--shadow-sm);
+         transition: all 0.3s ease;
+     }
+    
+    [data-testid="metric-container"]:hover {
+        box-shadow: var(--shadow-md);
+        transform: translateY(-1px);
+    }
+    
+    /* Enhanced progress bars */
+    .stProgress > div > div > div > div {
+        background: var(--gradient-primary) !important;
+        border-radius: 4px !important;
+    }
+    
+    /* Success/error messages */
+    .stSuccess {
+        background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%) !important;
+        border: 1px solid #bbf7d0 !important;
+        border-radius: 8px !important;
+        color: var(--success-color) !important;
+    }
+    
+    .stError {
+        background: linear-gradient(135deg, #fef2f2 0%, #fecaca 100%) !important;
+        border: 1px solid #fecaca !important;
+        border-radius: 8px !important;
+        color: var(--error-color) !important;
+    }
+    
+    .stWarning {
+        background: linear-gradient(135deg, #fefce8 0%, #fef3c7 100%) !important;
+        border: 1px solid #fef3c7 !important;
+        border-radius: 8px !important;
+        color: var(--warning-color) !important;
+    }
+    
+    .stInfo {
+        background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%) !important;
+        border: 1px solid #bfdbfe !important;
+        border-radius: 8px !important;
+        color: var(--secondary-color) !important;
+    }
+    
+         /* Enhanced selectbox */
+     .stSelectbox > div > div > div {
+         border: 2px solid var(--border-color) !important;
+         border-radius: 8px !important;
+         background: var(--background-card) !important;
+     }
+    
+    /* Enhanced radio buttons */
+    .stRadio > div > label > div {
+        background: var(--background-secondary) !important;
+        border: 2px solid var(--border-color) !important;
+        border-radius: 8px !important;
+        transition: all 0.3s ease !important;
+    }
+    
+         .stRadio > div > label > div:hover {
+         border-color: var(--primary-color) !important;
+         background: var(--background-card) !important;
+     }
+    
+         /* Enhanced checkboxes */
+     .stCheckbox > label > div {
+         background: var(--background-card) !important;
+         border: 2px solid var(--border-color) !important;
+         border-radius: 4px !important;
+     }
+    
+    /* Animation classes */
+    .fade-in {
+        animation: fadeIn 0.6s ease-in;
+    }
+    
+    .slide-up {
+        animation: slideUp 0.6s ease-out;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    
+    @keyframes slideUp {
+        from { 
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to { 
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    /* Glass morphism effect for special cards */
+    .glass-card {
+        background: rgba(255, 255, 255, 0.25);
+        backdrop-filter: blur(10px);
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        padding: 2rem;
+        margin: 1rem 0;
+    }
+    
+    /* Loading spinner enhancement */
+    .stSpinner > div {
+        border-color: var(--primary-color) !important;
+    }
+    
+    /* Code blocks */
+    .stCode {
+        border-radius: 8px !important;
+        border: 1px solid var(--border-color) !important;
+        font-family: 'JetBrains Mono', monospace !important;
+    }
+    
+    /* Download button enhancement */
+    .stDownloadButton > button {
+        background: var(--gradient-secondary) !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 8px !important;
+        padding: 0.5rem 1rem !important;
+        font-weight: 500 !important;
+        transition: all 0.3s ease !important;
+    }
+    
+    .stDownloadButton > button:hover {
+        transform: translateY(-1px) !important;
+        box-shadow: var(--shadow-md) !important;
+    }
+    
+    /* Responsive design */
+    @media (max-width: 768px) {
+        .main > div {
+            padding: 1rem 0.5rem;
+        }
+        
+        .main-header {
+            font-size: 2rem;
+        }
+        
+        .sub-header {
+            font-size: 1rem;
+        }
+        
+        .agent-card, .feature-box {
+            padding: 1rem;
+        }
+    }
+    
+         /* Additional responsive styles can be added here if needed */
 </style>
 """, unsafe_allow_html=True)
 
@@ -152,25 +568,61 @@ def initialize_agents():
 def main():
     """Main application interface"""
     
-    # Header
-    st.markdown('<h1 class="main-header">🤖 Agent Creator</h1>', unsafe_allow_html=True)
-    st.markdown('<p class="sub-header">AI-Powered Research & Web Scraping Platform with MLX Integration</p>', 
-                unsafe_allow_html=True)
+    # Header with enhanced styling
+    st.markdown('''
+    <div class="fade-in">
+        <h1 class="main-header">🤖 Agent Creator</h1>
+        <p class="sub-header">AI-Powered Research & Web Scraping Platform with MLX Integration</p>
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <span style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                         color: white; padding: 0.5rem 1rem; border-radius: 20px; 
+                         font-size: 0.9rem; font-weight: 500; margin: 0 0.5rem;">
+                🚀 Next-Gen AI Platform
+            </span>
+            <span style="background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%); 
+                         color: white; padding: 0.5rem 1rem; border-radius: 20px; 
+                         font-size: 0.9rem; font-weight: 500; margin: 0 0.5rem;">
+                ⚡ MLX Powered
+            </span>
+        </div>
+    </div>
+    ''', unsafe_allow_html=True)
     
-    # Sidebar
+    # Enhanced Sidebar
     with st.sidebar:
-        st.markdown("## 🛠️ Agent Control Panel")
+        st.markdown('''
+        <div class="slide-up">
+            <h2 style="color: var(--primary-color); font-weight: 600; margin-bottom: 1.5rem; 
+                       text-align: center; font-size: 1.5rem;">
+                🛠️ Control Center
+            </h2>
+        </div>
+        ''', unsafe_allow_html=True)
         
-        # Agent initialization
-        if st.button("🚀 Initialize Agents", type="primary"):
-            with st.spinner("Initializing AI agents..."):
+        # Agent initialization with enhanced styling
+        st.markdown('''
+        <div style="background: linear-gradient(135deg, #374151 0%, #4b5563 100%); 
+                    padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem; 
+                    border: 2px solid var(--border-color);">
+        ''', unsafe_allow_html=True)
+        if st.button("🚀 Initialize Agents", type="primary", key="init_agents_btn", use_container_width=True):
+            with st.spinner("🔄 Initializing AI agents..."):
                 if initialize_agents():
                     st.success("✅ Agents initialized successfully!")
                 else:
                     st.error("❌ Failed to initialize agents")
+        st.markdown('</div>', unsafe_allow_html=True)
         
-        # Agent status
-        st.markdown("### Agent Status")
+        # Agent status with enhanced cards
+        st.markdown('''
+        <div style="margin: 1.5rem 0;">
+            <h3 style="color: var(--text-primary); font-weight: 600; margin-bottom: 1rem; 
+                       font-size: 1.1rem; display: flex; align-items: center; gap: 0.5rem;">
+                📡 Agent Status
+            </h3>
+        </div>
+        ''', unsafe_allow_html=True)
+        
         if st.session_state.research_agent:
             st.markdown('<div class="status-success">🔬 Research Agent: Online</div>', 
                        unsafe_allow_html=True)
@@ -185,13 +637,47 @@ def main():
             st.markdown('<div class="status-error">🕷️ Webscraper Agent: Offline</div>', 
                        unsafe_allow_html=True)
         
-        # Statistics
-        st.markdown("### 📊 Statistics")
+        # Enhanced Statistics
+        st.markdown('''
+        <div style="margin: 1.5rem 0;">
+            <h3 style="color: var(--text-primary); font-weight: 600; margin-bottom: 1rem; 
+                       font-size: 1.1rem; display: flex; align-items: center; gap: 0.5rem;">
+                📊 Analytics
+            </h3>
+        </div>
+        ''', unsafe_allow_html=True)
+        
         col1, col2 = st.columns(2)
         with col1:
-            st.metric("Research Tasks", len(st.session_state.research_results))
+            st.metric(
+                "Research Tasks", 
+                len(st.session_state.research_results),
+                delta=None,
+                help="Total research tasks completed"
+            )
         with col2:
-            st.metric("Scraping Tasks", len(st.session_state.scraping_results))
+            st.metric(
+                "Scraping Tasks", 
+                len(st.session_state.scraping_results),
+                delta=None,
+                help="Total web scraping tasks completed"
+            )
+        
+        # Add quick stats
+        if st.session_state.research_results or st.session_state.scraping_results:
+            st.markdown('''
+            <div style="background: var(--background-secondary); padding: 1rem; 
+                        border-radius: 8px; margin-top: 1rem; text-align: center;">
+                <div style="font-size: 0.9rem; color: var(--text-secondary);">
+                    Platform Activity Score
+                </div>
+                <div style="font-size: 1.5rem; font-weight: 600; color: var(--primary-color);">
+                    {}
+                </div>
+            </div>
+            '''.format(
+                (len(st.session_state.research_results) + len(st.session_state.scraping_results)) * 10
+            ), unsafe_allow_html=True)
     
     # Main content area
     tab1, tab2, tab3, tab4 = st.tabs([
@@ -213,11 +699,35 @@ def main():
 
 def research_agent_interface():
     """Interface for the Research Agent"""
-    st.markdown("## 🔬 AI Research Agent")
-    st.markdown("Perform comprehensive online research with AI-powered analysis and report generation.")
+    st.markdown('''
+    <div class="slide-up">
+        <div style="background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%); 
+                    padding: 2rem; border-radius: 16px; margin-bottom: 2rem; 
+                    border: 1px solid var(--border-color); position: relative; overflow: hidden;">
+            <div style="position: absolute; top: 0; left: 0; right: 0; height: 4px; 
+                        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);"></div>
+            <h2 style="color: var(--primary-color); font-size: 2rem; font-weight: 700; 
+                       margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.75rem;">
+                🔬 AI Research Agent
+            </h2>
+            <p style="color: var(--text-secondary); font-size: 1.1rem; margin: 0; line-height: 1.6;">
+                Perform comprehensive online research with AI-powered analysis and report generation.
+            </p>
+        </div>
+    </div>
+    ''', unsafe_allow_html=True)
     
     if not st.session_state.research_agent:
-        st.warning("⚠️ Please initialize the agents first using the sidebar.")
+        st.markdown('''
+        <div style="background: linear-gradient(135deg, #374151 0%, #4b5563 100%); 
+                    padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-color); 
+                    margin: 2rem 0; text-align: center;">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">⚠️</div>
+            <div style="color: var(--warning-color); font-weight: 600; font-size: 1.1rem;">
+                Please initialize the agents first using the sidebar.
+            </div>
+        </div>
+        ''', unsafe_allow_html=True)
         return
     
     # Research configuration
@@ -231,12 +741,25 @@ def research_agent_interface():
             use_webscraper = st.checkbox("Enhanced content extraction", value=True, 
                                        help="Use webscraper agent for deeper content analysis")
     
-    # Research query input
-    st.markdown("### 📝 Research Query")
+    # Research query input with enhanced styling
+    st.markdown('''
+    <div style="margin: 2rem 0;">
+        <h3 style="color: var(--text-primary); font-weight: 600; margin-bottom: 1rem; 
+                   font-size: 1.3rem; display: flex; align-items: center; gap: 0.5rem;">
+            📝 Research Query
+        </h3>
+        <p style="color: var(--text-secondary); margin-bottom: 1rem; font-size: 0.95rem;">
+            Enter your research topic or question. Be specific for better results.
+        </p>
+    </div>
+    ''', unsafe_allow_html=True)
+    
     query = st.text_area(
-        "Enter your research topic or question:",
+        "Research Topic",
         placeholder="e.g., 'Latest developments in artificial intelligence and machine learning'",
-        height=100
+        height=120,
+        help="Provide a clear, specific research question or topic for optimal results",
+        label_visibility="collapsed"
     )
     
     # Research execution
@@ -311,11 +834,35 @@ def execute_research(query: str, max_results: int, generate_pdf: bool,
 
 def webscraper_agent_interface():
     """Interface for the Webscraper Agent"""
-    st.markdown("## 🕷️ Advanced Web Scraper")
-    st.markdown("Extract content, links, and metadata from web pages with intelligent parsing.")
+    st.markdown('''
+    <div class="slide-up">
+        <div style="background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%); 
+                    padding: 2rem; border-radius: 16px; margin-bottom: 2rem; 
+                    border: 1px solid var(--border-color); position: relative; overflow: hidden;">
+            <div style="position: absolute; top: 0; left: 0; right: 0; height: 4px; 
+                        background: linear-gradient(90deg, #06b6d4 0%, #3b82f6 100%);"></div>
+            <h2 style="color: var(--secondary-color); font-size: 2rem; font-weight: 700; 
+                       margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.75rem;">
+                🕷️ Advanced Web Scraper
+            </h2>
+            <p style="color: var(--text-secondary); font-size: 1.1rem; margin: 0; line-height: 1.6;">
+                Extract content, links, and metadata from web pages with intelligent parsing.
+            </p>
+        </div>
+    </div>
+    ''', unsafe_allow_html=True)
     
     if not st.session_state.webscraper_agent:
-        st.warning("⚠️ Please initialize the agents first using the sidebar.")
+        st.markdown('''
+        <div style="background: linear-gradient(135deg, #374151 0%, #4b5563 100%); 
+                    padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-color); 
+                    margin: 2rem 0; text-align: center;">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">⚠️</div>
+            <div style="color: var(--warning-color); font-weight: 600; font-size: 1.1rem;">
+                Please initialize the agents first using the sidebar.
+            </div>
+        </div>
+        ''', unsafe_allow_html=True)
         return
     
     # Scraping mode selection
@@ -344,44 +891,84 @@ def webscraper_agent_interface():
 
 def single_url_interface():
     """Interface for single URL scraping"""
-    st.markdown("### 🌐 Single URL Scraping")
+    st.markdown('''
+    <div style="margin: 1.5rem 0;">
+        <h3 style="color: var(--secondary-color); font-weight: 600; margin-bottom: 1rem; 
+                   font-size: 1.3rem; display: flex; align-items: center; gap: 0.5rem;">
+            🌐 Single URL Scraping
+        </h3>
+        <p style="color: var(--text-secondary); margin-bottom: 1rem; font-size: 0.95rem;">
+            Extract content from a single webpage with intelligent parsing.
+        </p>
+    </div>
+    ''', unsafe_allow_html=True)
+    
     url = st.text_input(
-        "Enter URL to scrape:",
+        "URL to Scrape",
         placeholder="https://example.com",
-        help="Enter a valid URL to extract content from"
+        help="Enter a valid URL to extract content from",
+        key="single_url_input",
+        label_visibility="collapsed"
     )
     
     col1, col2 = st.columns([2, 1])
     with col1:
-        if st.button("🕷️ Scrape URL", type="primary", disabled=not url.strip()):
+        if st.button("🕷️ Scrape URL", type="primary", disabled=not url.strip(), key="scrape_single_url_btn"):
             execute_single_scraping(url)
     with col2:
-        if st.button("📋 Example URL"):
+        if st.button("📋 Example URL", key="example_single_url_btn"):
             st.session_state.example_url = "https://news.ycombinator.com"
             st.rerun()
 
 def multiple_urls_interface():
     """Interface for multiple URLs scraping"""
-    st.markdown("### 🌐 Multiple URLs Scraping")
+    st.markdown('''
+    <div style="margin: 1.5rem 0;">
+        <h3 style="color: var(--secondary-color); font-weight: 600; margin-bottom: 1rem; 
+                   font-size: 1.3rem; display: flex; align-items: center; gap: 0.5rem;">
+            🌐 Multiple URLs Scraping
+        </h3>
+        <p style="color: var(--text-secondary); margin-bottom: 1rem; font-size: 0.95rem;">
+            Batch process multiple URLs for efficient content extraction.
+        </p>
+    </div>
+    ''', unsafe_allow_html=True)
+    
     urls_text = st.text_area(
-        "Enter URLs (one per line):",
+        "URLs to Scrape",
         placeholder="https://example1.com\nhttps://example2.com\nhttps://example3.com",
-        height=120
+        height=140,
+        help="Enter each URL on a separate line for batch processing",
+        label_visibility="collapsed"
     )
     
-    if st.button("🕷️ Scrape All URLs", type="primary", disabled=not urls_text.strip()):
+    if st.button("🕷️ Scrape All URLs", type="primary", disabled=not urls_text.strip(), key="scrape_multiple_urls_btn"):
         urls = [url.strip() for url in urls_text.split('\n') if url.strip()]
         execute_multiple_scraping(urls)
 
 def link_extraction_interface():
     """Interface for link extraction"""
-    st.markdown("### 🔗 Link Extraction")
+    st.markdown('''
+    <div style="margin: 1.5rem 0;">
+        <h3 style="color: var(--secondary-color); font-weight: 600; margin-bottom: 1rem; 
+                   font-size: 1.3rem; display: flex; align-items: center; gap: 0.5rem;">
+            🔗 Link Extraction
+        </h3>
+        <p style="color: var(--text-secondary); margin-bottom: 1rem; font-size: 0.95rem;">
+            Discover and extract all links from a webpage automatically.
+        </p>
+    </div>
+    ''', unsafe_allow_html=True)
+    
     url = st.text_input(
-        "Enter URL to extract links from:",
-        placeholder="https://example.com"
+        "URL for Link Extraction",
+        placeholder="https://example.com",
+        key="link_extraction_input",
+        help="Enter a URL to extract all discoverable links from the page",
+        label_visibility="collapsed"
     )
     
-    if st.button("🔗 Extract Links", type="primary", disabled=not url.strip()):
+    if st.button("🔗 Extract Links", type="primary", disabled=not url.strip(), key="extract_links_btn"):
         execute_link_extraction(url)
 
 def execute_single_scraping(url: str):
@@ -490,14 +1077,15 @@ def display_research_result(research_data: Dict[str, Any]):
     # Generated files
     if result['files_generated']:
         st.markdown("#### 📁 Generated Files")
-        for file_path in result['files_generated']:
+        for i, file_path in enumerate(result['files_generated']):
             if os.path.exists(file_path):
                 with open(file_path, 'rb') as f:
                     st.download_button(
                         label=f"📥 Download {os.path.basename(file_path)}",
                         data=f.read(),
                         file_name=os.path.basename(file_path),
-                        mime="application/octet-stream"
+                        mime="application/octet-stream",
+                        key=f"download_research_{research_data['timestamp']}_{i}_{os.path.basename(file_path)}"
                     )
 
 def display_scraping_result(result):
@@ -545,10 +1133,38 @@ def display_scraping_result(result):
 
 def results_analytics():
     """Display results and analytics"""
-    st.markdown("## 📊 Results & Analytics")
+    st.markdown('''
+    <div class="slide-up">
+        <div style="background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%); 
+                    padding: 2rem; border-radius: 16px; margin-bottom: 2rem; 
+                    border: 1px solid var(--border-color); position: relative; overflow: hidden;">
+            <div style="position: absolute; top: 0; left: 0; right: 0; height: 4px; 
+                        background: linear-gradient(90deg, #a855f7 0%, #8b5cf6 100%);"></div>
+            <h2 style="color: #a855f7; font-size: 2rem; font-weight: 700; 
+                       margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.75rem;">
+                📊 Results & Analytics
+            </h2>
+            <p style="color: var(--text-secondary); font-size: 1.1rem; margin: 0; line-height: 1.6;">
+                Comprehensive overview of your research and scraping activities.
+            </p>
+        </div>
+    </div>
+    ''', unsafe_allow_html=True)
     
     if not st.session_state.research_results and not st.session_state.scraping_results:
-        st.info("No results yet. Start by running some research or scraping tasks!")
+        st.markdown('''
+        <div style="background: linear-gradient(135deg, #374151 0%, #4b5563 100%); 
+                    padding: 2rem; border-radius: 16px; border: 1px solid var(--border-color); 
+                    margin: 2rem 0; text-align: center;">
+            <div style="font-size: 4rem; margin-bottom: 1rem;">📈</div>
+            <div style="color: var(--secondary-color); font-weight: 600; font-size: 1.2rem; margin-bottom: 0.5rem;">
+                Ready to Analyze
+            </div>
+            <div style="color: var(--text-secondary); font-size: 1rem;">
+                No results yet. Start by running some research or scraping tasks!
+            </div>
+        </div>
+        ''', unsafe_allow_html=True)
         return
     
     # Overview metrics
@@ -588,7 +1204,23 @@ def results_analytics():
 
 def documentation_interface():
     """Display documentation and help"""
-    st.markdown("## 📖 Documentation")
+    st.markdown('''
+    <div class="slide-up">
+        <div style="background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%); 
+                    padding: 2rem; border-radius: 16px; margin-bottom: 2rem; 
+                    border: 1px solid var(--border-color); position: relative; overflow: hidden;">
+            <div style="position: absolute; top: 0; left: 0; right: 0; height: 4px; 
+                        background: linear-gradient(90deg, #ec4899 0%, #be185d 100%);"></div>
+            <h2 style="color: #ec4899; font-size: 2rem; font-weight: 700; 
+                       margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.75rem;">
+                📖 Documentation & Help
+            </h2>
+            <p style="color: var(--text-secondary); font-size: 1.1rem; margin: 0; line-height: 1.6;">
+                Complete guide to using the Agent Creator platform effectively.
+            </p>
+        </div>
+    </div>
+    ''', unsafe_allow_html=True)
     
     st.markdown("""
     ### 🤖 Agent Creator Platform
