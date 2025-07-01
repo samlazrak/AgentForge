@@ -1,0 +1,23 @@
+include README.md
+include LICENSE
+include requirements-core.txt
+include pyproject.toml
+include setup.py
+
+# Include all Python files
+recursive-include deep_researcher *.py
+
+# Include package data
+recursive-include deep_researcher *.txt
+recursive-include deep_researcher *.md
+
+# Exclude unnecessary files
+global-exclude *.pyc
+global-exclude *.pyo
+global-exclude __pycache__/*
+global-exclude .git/*
+global-exclude .gitignore
+global-exclude *.log
+global-exclude .pytest_cache/*
+global-exclude .coverage
+global-exclude .DS_Store
