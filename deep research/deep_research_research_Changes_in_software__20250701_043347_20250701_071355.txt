@@ -1,0 +1,252 @@
+Deep Research Report
+==================================================
+
+Source PDF: research_Changes_in_software__20250701_043347.pdf
+Analysis Date: 2025-07-01 07:13:55
+Total Links Found: 15
+Successful Scrapes: 9
+
+Summary:
+--------------------
+This is a mock research response. The topic appears to be about 
+        Research Summary:
+
+Total links extracted:...
+
+Extracted Links:
+--------------------
+1. https://www.forbes.com/sites/moorinsights/2025/06/10/will-ai-agents-upend-the-software-develop
+   Context: n software devel... Sources Will AI Agents Upend The Software Development Life Cycle? - Forbes URL: https://www.forbes.com/sites/moorinsights/2025/06/10/will-ai-agents-upend-the-software-develop ment-life-cycle/ A significant step up from chat-based code assistants, agentic software tools have
+   Page: 1
+
+2. https://techpilot.ai/ai-and-the-future-of-software-engineering-2025/
+   Context: he software development life cycle. AI and the future of software engineering: 2025 and beyond URL: https://techpilot.ai/ai-and-the-future-of-software-engineering-2025/ Software engineers who embrace change, strategically reskill, and leverage AI's capabilities will f
+   Page: 1
+
+3. https://dev.to/aiagentstore/2025-outlook-how-ai-agents-may-reshape-software-development-3ac0
+   Context: sential to the industry's future. 2025 Outlook: How AI Agents May Reshape Software Development URL: https://dev.to/aiagentstore/2025-outlook-how-ai-agents-may-reshape-software-development-3ac0 The rapid evolution of AI coding assistants in 2024 points to significant changes ahead for softwar
+   Page: 1
+
+4. https://aiagentpicks.com/blog/how-ai-agents-are-changing-software-development-in-2025/
+   Context: ensive project automation. By 2025 ... How AI Agents Are Changing Software Development in 2025 URL: https://aiagentpicks.com/blog/how-ai-agents-are-changing-software-development-in-2025/ In 2025, AI software development agents are more powerful than ever. They don't just assist develop
+   Page: 1
+
+5. https://thenewstack.io/how-ai-is-reshaping-software-engineering-key-takeaways-from-developerw
+   Context: ed engineers find impressive. How AI Is Reshaping Software Engineering: Key Takeaways From ... URL: https://thenewstack.io/how-ai-is-reshaping-software-engineering-key-takeaways-from-developerw eek-2025/ The future belongs to engineering leaders who embrace AI — not just as a tool, but as a f
+   Page: 1
+
+6. https://www.jalasoft.com/blog/ai-software-development
+   Context: s work and build software. AI, Software Development, and the Future of Engineers. What's Next? URL: https://www.jalasoft.com/blog/ai-software-development How is AI changing software engineering? Explore the future of coding with insights from Jalasoft's
+   Page: 1
+
+7. https://www.dice.com/career-advice/how-ai-will-impact-software-development-in-2025-and-beyond
+   Context: How AI Will Impact Software Development in 2025 and Beyond URL: https://www.dice.com/career-advice/how-ai-will-impact-software-development-in-2025-and-beyond What three changes do you see AI having for engineers and developers before the end of 2025? The ne
+   Page: 2
+
+8. https://www.baytechconsulting.com/blog/ai-and-software-development-2025
+   Context: efficiency," notes Charlie Clark ... AI and Software Development 2025 - baytechconsulting.com URL: https://www.baytechconsulting.com/blog/ai-and-software-development-2025 Successfully integrating AI into software development requires more than just adopting new tools; i
+   Page: 2
+
+9. https://ieeexplore.ieee.org/document/10970187
+   Context: d strong governance. How AI Agents Are Transforming Software Engineering and the Future of ... URL: https://ieeexplore.ieee.org/document/10970187 Artificial Intelligence (AI) agents are revolutionizing software engineering, boosting productivity
+   Page: 2
+
+10. https://content.clearpoint.digital/unlock/ai-agents-and-the-future-of-software-engineering
+   Context: eers and raising critical ethical challenges. AI Agents and the Future of Software Engineering URL: https://content.clearpoint.digital/unlock/ai-agents-and-the-future-of-software-engineering They see particular opportunity for New Zealand to overcome scale limitations through AI, and stres
+   Page: 2
+
+11. https://sprigstack.com/blog/the-future-of-software-development-predictions-for-2025-and-beyond
+   Context: e and its societal impact. The Future of Software Development: Predictions for 2025 and Beyond URL: https://sprigstack.com/blog/the-future-of-software-development-predictions-for-2025-and-beyond As one of the most progressive fields in the IT industry, software development witnesses evolving t
+   Page: 2
+
+12. https://www.researchgate.net/publication/330185339_The_Future_of_Software_Engineering_by_
+   Context: oftware development. The Future of Software Engineering by 2050s: Will AI Replace Software ... URL: https://www.researchgate.net/publication/330185339_The_Future_of_Software_Engineering_by_ 2050s_Will_AI_Replace_Software_Engineers Researcher Lubna Mahmoud Abu Zohair from The British Unive
+   Page: 2
+
+13. https://flatlogic.com/blog/top-10-best-ai-software-development-agents/
+   Context: ear future [10]. The author conducted a ... Top 10 Best AI Software Development Agents in 2025 URL: https://flatlogic.com/blog/top-10-best-ai-software-development-agents/ The future of AI in software development - and whether it's replacing or enhancing human engineers.
+   Page: 2
+
+14. https://www.researchgate.net/publication/381373265_The_Future_of_Software_Engineering_in_
+   Context: nd deploy software with minimal human The Future of Software Engineering in an AI-Driven World URL: https://www.researchgate.net/publication/381373265_The_Future_of_Software_Engineering_in_ an_AI-Driven_World A paradigm shift is underway in Software Engineering, with AI systems such as LL
+   Page: 2
+
+15. https://dev.to/asifnaqvi5/the-future-of-software-engineering-in-2025-trends-challenges-and-opport
+   Context: nticipated to persist. The Future of Software Engineering in 2025: Trends, Challenges, and ... URL: https://dev.to/asifnaqvi5/the-future-of-software-engineering-in-2025-trends-challenges-and-opport unities-5186 AI-Driven Software Development; Artificial intelligence ... In the near future, AI sys
+   Page: 2
+
+Scraped Content:
+--------------------
+1. https://www.forbes.com/sites/moorinsights/2025/06/10/will-ai-agents-upend-the-software-develop
+   Title: 
+   Success: False
+   Error: 404 Client Error: Not Found for url: https://www.forbes.com/sites/moorinsights/2025/06/10/will-ai-agents-upend-the-software-develop/
+
+2. https://techpilot.ai/ai-and-the-future-of-software-engineering-2025/
+   Title: AI and the future of software engineering: 2025 and beyond
+   Success: True
+   Content: AI and the future of software engineering: 2025 and beyond
+Blog» AI and the future of software engineering: What to expect in 2025
+AI and the future of software engineering: What to expect in 2025
+Will AI replace software engineering Discover how AI is reshaping coding, testing, and more in 2025, and why human creativity and expertise still matter
+John Daniel
+Corporate finance, Mathematics, GenAI
+Verified By Expert
+Published: November 28, 2024 | Updated: November 28, 2024
+Software engineering co...
+
+3. https://dev.to/aiagentstore/2025-outlook-how-ai-agents-may-reshape-software-development-3ac0
+   Title: 2025 Outlook: How AI Agents May Reshape Software Development - DEV Community
+   Success: True
+   Content: 2025 Outlook: How AI Agents May Reshape Software Development - DEV Community
+Skip to content
+Navigation menu
+Create account
+DEV Community
+Add reaction
+Exploding Head
+Raised Hands
+Jump to Comments
+Copied to Clipboard
+Share to X
+Share to LinkedIn
+Share to Facebook
+Share to Mastodon
+Report Abuse
+AI Agent Store
+Posted on Dec 24, 2024
+2025 Outlook: How AI Agents May Reshape Software Development
+The rapid evolution of AI coding assistants in 2024 points to significant changes ahead for software develo...
+
+4. https://aiagentpicks.com/blog/how-ai-agents-are-changing-software-development-in-2025/
+   Title: 
+   Success: False
+   Error: HTTPSConnectionPool(host='aiagentpicks.com', port=443): Max retries exceeded with url: /blog/how-ai-agents-are-changing-software-development-in-2025/ (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1028)')))
+
+5. https://thenewstack.io/how-ai-is-reshaping-software-engineering-key-takeaways-from-developerw
+   Title: 
+   Success: False
+   Error: 404 Client Error: Not Found for url: https://thenewstack.io/how-ai-is-reshaping-software-engineering-key-takeaways-from-developerw/
+
+6. https://www.jalasoft.com/blog/ai-software-development
+   Title: AI, Software Development, and the Future of Engineers. What's Next?
+   Success: True
+   Content: AI, Software Development, and the Future of Engineers. What's Next?Schedule a callServicesClientsAbout usCareersBlogAi Software DevelopmentINDUSTRY TRENDS & EMERGING TECHNOLOGIESWhat Happens to Software Engineers When AI Takes Over? How will AI adoption change coding and what is the future of software engineering? Jalasoft’s experts dive into the possibilities that AI brings. Read now! Jalasoft's Editorial Team7 min reading6/30/2025Article Contents1. The Birth of Prompt Engineers2. AI Can Write ...
+
+7. https://www.dice.com/career-advice/how-ai-will-impact-software-development-in-2025-and-beyond
+   Title: How AI Will Impact Software Development in 2025 and Beyond | Dice.com Career Advice
+   Success: True
+   Content: How AI Will Impact Software Development in 2025 and Beyond | Dice.com Career Advice
+Career Advice Home
+Job Hunting
+Resume Help
+Interview Tips
+Career Path
+Career Growth
+Diversity Equity and Inclusion
+Tech Connects Podcast
+How AI Will Impact Software Development in 2025 and Beyond
+Nate Swanner
+Dec 18, 2024
+9 min read
+As tech professionals remain hard at work developing artificial intelligence (AI) models, finding new pathways to utilize AI, and discovering where the technology will be most useful,...
+
+8. https://www.baytechconsulting.com/blog/ai-and-software-development-2025
+   Title: AI and Software Development 2025
+   Success: True
+   Content: AI and Software Development 2025 HomeAboutBlogServicesAI & InnovationAI PoweredIntegrating AIAgile MethodologyCloud & InfrastructureCloud Development And Deployment ConsultingDevOps EfficiencyHosting SolutionsDesign & User ExperienceUX Design - Baytech ConsultingSoftware SolutionsWeb Application DevelopmentCustom Software DevelopmentMobile Application DevelopmentStrategic ServicesStartup ServicesProject RescueDedicated TeamSupport & MaintenanceOngoing SupportService ContractsPartnership Approach...
+
+9. https://ieeexplore.ieee.org/document/10970187
+   Title: How AI Agents Are Transforming Software Engineering and the Future of Product Development | IEEE Journals & Magazine | IEEE Xplore
+   Success: True
+   Content: How AI Agents Are Transforming Software Engineering and the Future of Product Development | IEEE Journals & Magazine | IEEE Xplore
+IEEE Account
+Change Username/Password
+Update Address
+Purchase Details
+Payment Options
+Order History
+View Purchased Documents
+Profile Information
+Communications Preferences
+Profession and Education
+Technical Interests
+US & Canada: +1 800 678 4333
++1 732 981 0060
+Contact & Support
+About IEEE Xplore
+Accessibility
+Terms of Use
+Nondiscrimination Policy
+Privacy & Opting Ou...
+
+10. https://content.clearpoint.digital/unlock/ai-agents-and-the-future-of-software-engineering
+   Title: AI Agents and the Future of Software Engineering
+   Success: True
+   Content: AI Agents and the Future of Software Engineering
+Skip to content
+Talk to us
+Consulting and Digital Services
+Experience and Design
+Artificial Intelligence
+Software Engineering
+Platforms and Cloud
+Data and Insights
+Financial Services
+Public Sector
+Customer success
+Who we are
+Our Partners
+Talk to us
+AI Agents and the Future of Software Engineering
+In this episode of ClearPoint Unlock, Rob Cleghorn, CTO at ClearPoint, and Jonathan Ackerman, Principal AI Engineer at ClearPoint, explore how AI agents ...
+
+11. https://sprigstack.com/blog/the-future-of-software-development-predictions-for-2025-and-beyond
+   Title: The Future of Software Development: Predictions for 2025 and Beyond
+   Success: True
+   Content: The Future of Software Development: Predictions for 2025 and Beyond...
+
+12. https://www.researchgate.net/publication/330185339_The_Future_of_Software_Engineering_by_
+   Title: 
+   Success: False
+   Error: 403 Client Error: Forbidden for url: https://www.researchgate.net/publication/330185339_The_Future_of_Software_Engineering_by_
+
+13. https://flatlogic.com/blog/top-10-best-ai-software-development-agents/
+   Title: Top 10 Best AI Software Development Agents in 2025 - Flatlogic Blog
+   Success: True
+   Content: Top 10 Best AI Software Development Agents in 2025 - Flatlogic Blog
+X (Twitter)
+Web App Generator
+AI Web App Generator
+AI Software Development Agent
+Custom SAAS
+MVP in a Week
+AI-driven Business Apps
+Admin Panel
+All Solutions
+Free 30 Min Consultation
+Web App Development
+Mobile App Development
+Legacy Apps Adapt/Upgrade
+Admin Template Integration
+UX/UI Design
+Case Studies
+All Services
+Free 30 Min Consultation
+Discord Community
+Documentation
+Case Studies
+Hackathon Sponsorship
+Free Templates
+🔬 Starti...
+
+14. https://www.researchgate.net/publication/381373265_The_Future_of_Software_Engineering_in_
+   Title: 
+   Success: False
+   Error: 403 Client Error: Forbidden for url: https://www.researchgate.net/publication/381373265_The_Future_of_Software_Engineering_in_
+
+15. https://dev.to/asifnaqvi5/the-future-of-software-engineering-in-2025-trends-challenges-and-opport
+   Title: 
+   Success: False
+   Error: 404 Client Error: Not Found for url: https://dev.to/asifnaqvi5/the-future-of-software-engineering-in-2025-trends-challenges-and-opport
+

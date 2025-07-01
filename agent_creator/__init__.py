@@ -12,6 +12,7 @@ from .core.base_agent import BaseAgent
 from .agents.research_agent import ResearchAgent
 from .agents.webscraper_agent import WebscraperAgent
 from .agents.data_analysis_agent import DataAnalysisAgent
+from .agents.deep_researcher_agent import DeepResearcherAgent
 from .utils.llm_interface import LLMInterface
 
 __all__ = [
@@ -19,5 +20,6 @@ __all__ = [
     "ResearchAgent", 
     "WebscraperAgent",
     "DataAnalysisAgent",
+    "DeepResearcherAgent",
     "LLMInterface"
 ]
