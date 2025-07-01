@@ -18,7 +18,7 @@ logging.basicConfig(level=logging.INFO)
 
 # Import our agents
 try:
-    from agent_creator import ResearchAgent, WebscraperAgent, DataAnalysisAgent, LLMInterface
+    from agent_creator import ResearchAgent, WebscraperAgent, DataAnalysisAgent, DeepResearcherAgent, LLMInterface
     from agent_creator.core.base_agent import AgentConfig
     from agent_creator.agents.webscraper_agent import ScrapingConfig
 except ImportError as e:
@@ -520,16 +520,24 @@ if 'webscraper_agent' not in st.session_state:
     st.session_state.webscraper_agent = None
 if 'data_analysis_agent' not in st.session_state:
     st.session_state.data_analysis_agent = None
+if 'deep_researcher_agent' not in st.session_state:
+    st.session_state.deep_researcher_agent = None
 if 'research_results' not in st.session_state:
     st.session_state.research_results = []
 if 'scraping_results' not in st.session_state:
     st.session_state.scraping_results = []
 if 'analysis_results' not in st.session_state:
     st.session_state.analysis_results = []
+if 'deep_research_results' not in st.session_state:
+    st.session_state.deep_research_results = []
 
 def initialize_agents():
     """Initialize the research and webscraper agents"""
     try:
+        # Create directories if they don't exist
+        os.makedirs("research", exist_ok=True)
+        os.makedirs("deep research", exist_ok=True)
+        
         # Initialize Research Agent
         research_config = AgentConfig(
             name="StreamlitResearchAgent",
@@ -560,23 +568,40 @@ def initialize_agents():
         # Initialize Data Analysis Agent
         data_analysis_config = AgentConfig(
             name="StreamlitDataAnalysisAgent",
-            description="AI-powered data analysis agent for comprehensive data processing",
+            description="Advanced data analysis agent with visualization capabilities",
             capabilities=[
-                "file_analysis", "statistical_analysis", "visualization_generation",
-                "correlation_analysis", "data_quality_check", "report_generation"
+                "data_loading", "statistical_analysis", "visualization",
+                "correlation_analysis", "hypothesis_testing", "atf_support"
             ]
         )
         st.session_state.data_analysis_agent = DataAnalysisAgent(data_analysis_config)
         
-        # Connect webscraper to research agent
-        st.session_state.research_agent.set_webscraper_agent(st.session_state.webscraper_agent)
+        # Initialize Deep Researcher Agent
+        deep_researcher_config = AgentConfig(
+            name="StreamlitDeepResearcherAgent",
+            description="Advanced PDF link extraction and deep content scraping agent",
+            capabilities=[
+                "pdf_link_extraction", "content_scraping", "content_filtering",
+                "deep_analysis", "link_validation"
+            ]
+        )
+        st.session_state.deep_researcher_agent = DeepResearcherAgent(deep_researcher_config)
+        
+        # Connect agents
+        if st.session_state.research_agent and st.session_state.webscraper_agent:
+            st.session_state.research_agent.set_webscraper_agent(st.session_state.webscraper_agent)
+        
+        if st.session_state.deep_researcher_agent and st.session_state.webscraper_agent:
+            st.session_state.deep_researcher_agent.set_webscraper_agent(st.session_state.webscraper_agent)
         
         # Start agents
         st.session_state.research_agent.start()
         st.session_state.webscraper_agent.start()
         st.session_state.data_analysis_agent.start()
+        st.session_state.deep_researcher_agent.start()
         
         return True
+        
     except Exception as e:
         st.error(f"Error initializing agents: {e}")
         return False
@@ -659,6 +684,13 @@ def main():
         else:
             st.markdown('<div class="status-error">📊 Data Analysis Agent: Offline</div>', 
                        unsafe_allow_html=True)
+            
+        if st.session_state.deep_researcher_agent:
+            st.markdown('<div class="status-success">🔍 Deep Researcher Agent: Online</div>', 
+                       unsafe_allow_html=True)
+        else:
+            st.markdown('<div class="status-error">🔍 Deep Researcher Agent: Offline</div>', 
+                       unsafe_allow_html=True)
         
         # Enhanced Statistics
         st.markdown('''
@@ -670,13 +702,19 @@ def main():
         </div>
         ''', unsafe_allow_html=True)
         
-        col1, col2, col3 = st.columns(3)
+        col1, col2 = st.columns(2)
         with col1:
             st.metric(
                 "Research Tasks", 
                 len(st.session_state.research_results),
                 delta=None,
                 help="Total research tasks completed"
+            )
+            st.metric(
+                "Deep Research", 
+                len(st.session_state.deep_research_results),
+                delta=None,
+                help="Total deep research tasks completed"
             )
         with col2:
             st.metric(
@@ -685,7 +723,6 @@ def main():
                 delta=None,
                 help="Total web scraping tasks completed"
             )
-        with col3:
             st.metric(
                 "Analysis Tasks", 
                 len(st.session_state.analysis_results),
@@ -706,13 +743,13 @@ def main():
                 </div>
             </div>
             '''.format(
-                (len(st.session_state.research_results) + len(st.session_state.scraping_results) + len(st.session_state.analysis_results)) * 10
+                (len(st.session_state.research_results) + len(st.session_state.scraping_results) + len(st.session_state.analysis_results) + len(st.session_state.deep_research_results)) * 10
             ), unsafe_allow_html=True)
     
     # Main content area
-    tab1, tab2, tab3, tab4, tab5 = st.tabs([
-        "🔬 Research Agent", "🕷️ Webscraper Agent", "📊 Data Analysis Agent",
-        "📈 Results & Analytics", "📖 Documentation"
+    tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
+        "🔬 Research Agent", "🕷️ Webscraper Agent", "📊 Data Analysis Agent", 
+        "🔍 Deep Researcher", "📈 Results & Analytics", "📖 Documentation"
     ])
     
     with tab1:
@@ -725,9 +762,12 @@ def main():
         data_analysis_agent_interface()
     
     with tab4:
-        results_analytics()
+        deep_researcher_interface()
     
     with tab5:
+        results_analytics()
+    
+    with tab6:
         documentation_interface()
 
 def research_agent_interface():
@@ -1508,7 +1548,7 @@ def results_analytics():
     </div>
     ''', unsafe_allow_html=True)
     
-    if not st.session_state.research_results and not st.session_state.scraping_results:
+    if not st.session_state.research_results and not st.session_state.scraping_results and not st.session_state.deep_research_results:
         st.markdown('''
         <div style="background: linear-gradient(135deg, #374151 0%, #4b5563 100%); 
                     padding: 2rem; border-radius: 16px; border: 1px solid var(--border-color); 
@@ -1518,7 +1558,7 @@ def results_analytics():
                 Ready to Analyze
             </div>
             <div style="color: var(--text-secondary); font-size: 1rem;">
-                No results yet. Start by running some research or scraping tasks!
+                No results yet. Start by running some research, scraping, or deep research tasks!
             </div>
         </div>
         ''', unsafe_allow_html=True)
@@ -1527,9 +1567,11 @@ def results_analytics():
     # Overview metrics
     col1, col2, col3, col4 = st.columns(4)
     with col1:
-        st.metric("Total Research Tasks", len(st.session_state.research_results))
+        st.metric("Research Tasks", len(st.session_state.research_results))
+        st.metric("Deep Research", len(st.session_state.deep_research_results))
     with col2:
-        st.metric("Total Scraping Tasks", len(st.session_state.scraping_results))
+        st.metric("Scraping Tasks", len(st.session_state.scraping_results))
+        st.metric("Analysis Tasks", len(st.session_state.analysis_results))
     with col3:
         total_sources = sum(len(r['result']['research_result'].sources) 
                           for r in st.session_state.research_results)
@@ -1537,7 +1579,10 @@ def results_analytics():
     with col4:
         total_urls = sum(len(r.get('urls', [r.get('url', '')])) 
                         for r in st.session_state.scraping_results)
+        total_deep_links = sum(r['result'].total_links_found 
+                              for r in st.session_state.deep_research_results)
         st.metric("URLs Scraped", total_urls)
+        st.metric("Deep Links Found", total_deep_links)
     
     # Recent activity
     st.markdown("### 📈 Recent Activity")
@@ -1549,6 +1594,13 @@ def results_analytics():
             with st.expander(f"📄 {result['query'][:50]}... ({result['timestamp']})"):
                 display_research_result(result)
     
+    # Deep research results
+    if st.session_state.deep_research_results:
+        st.markdown("#### 🔍 Deep Research Tasks")
+        for result in reversed(st.session_state.deep_research_results):
+            with st.expander(f"📄 {result['filename']} ({result['timestamp']})"):
+                display_deep_research_result(result)
+    
     # Scraping results  
     if st.session_state.scraping_results:
         st.markdown("#### 🕷️ Scraping Tasks")
@@ -1558,6 +1610,13 @@ def results_analytics():
                     display_scraping_result(result['result'])
                 else:
                     st.json(result)
+    
+    # Analysis results
+    if st.session_state.analysis_results:
+        st.markdown("#### 📊 Analysis Tasks")
+        for result in reversed(st.session_state.analysis_results):
+            with st.expander(f"📈 {result['type']} ({result['timestamp']})"):
+                display_analysis_result(result)
 
 def documentation_interface():
     """Display documentation and help"""
@@ -1582,7 +1641,7 @@ def documentation_interface():
     st.markdown("""
     ### 🤖 Agent Creator Platform
     
-    Welcome to the Agent Creator platform! This application showcases two powerful AI agents:
+    Welcome to the Agent Creator platform! This application showcases four powerful AI agents:
     
     #### 🔬 Research Agent
     The Research Agent is your AI-powered research assistant that can:
@@ -1609,12 +1668,23 @@ def documentation_interface():
     - **AI-Generated Insights**: Intelligent analysis using LLM integration
     - **Electrophysiology Data**: Specialized support for ATF files from electrophysiology experiments
     
+    #### 🔍 Deep Researcher Agent
+    The Deep Researcher Agent specializes in PDF-based research and deep content analysis:
+    - **PDF Link Extraction**: Extract hyperlinks and URLs from PDF documents
+    - **Content Scraping**: Automatically scrape and analyze content from extracted links
+    - **Intelligent Filtering**: Filter content by domain and relevance
+    - **Comprehensive Reports**: Generate detailed analysis reports with structured data
+    - **Automated Summarization**: AI-powered summarization of scraped content
+    - **File Organization**: Save results to dedicated deep research directory
+    
     ### 🚀 Getting Started
     
-    1. **Initialize Agents**: Use the sidebar to initialize both agents
+    1. **Initialize Agents**: Use the sidebar to initialize all agents
     2. **Research**: Enter a research query in the Research Agent tab
-    3. **Scrape**: Use the Webscraper Agent for targeted content extraction
-    4. **Analyze**: View results and download generated reports
+    3. **Deep Research**: Upload a PDF in the Deep Researcher tab for link extraction
+    4. **Scrape**: Use the Webscraper Agent for targeted content extraction
+    5. **Analyze**: Upload data files in the Data Analysis Agent tab
+    6. **Review**: View results and download generated reports in the Results & Analytics tab
     
     ### 🔧 Technical Features
     
@@ -1630,6 +1700,7 @@ def documentation_interface():
     - **Market Research**: Competitive analysis and trend identification
     - **Content Analysis**: Website content extraction and analysis
     - **Data Collection**: Systematic web scraping for research purposes
+    - **PDF Research**: Extract and analyze references from academic papers and documents
     - **Scientific Data Analysis**: Process experimental data including electrophysiology recordings (ATF format)
     - **Laboratory Data Processing**: Analyze and visualize scientific measurements and observations
     
@@ -1649,6 +1720,8 @@ def documentation_interface():
             st.markdown("**Agent Status:**")
             st.write(f"Research Agent: {'✅ Online' if st.session_state.research_agent else '❌ Offline'}")
             st.write(f"Webscraper Agent: {'✅ Online' if st.session_state.webscraper_agent else '❌ Offline'}")
+            st.write(f"Data Analysis Agent: {'✅ Online' if st.session_state.data_analysis_agent else '❌ Offline'}")
+            st.write(f"Deep Researcher Agent: {'✅ Online' if st.session_state.deep_researcher_agent else '❌ Offline'}")
         
         with col2:
             st.markdown("**Dependencies:**")
@@ -1663,6 +1736,322 @@ def documentation_interface():
                 st.write("✅ Selenium WebDriver")
             except ImportError:
                 st.write("❌ Selenium WebDriver")
+            
+            try:
+                import pdfplumber
+                st.write("✅ PDF Processing (pdfplumber)")
+            except ImportError:
+                st.write("❌ PDF Processing (pdfplumber)")
+
+def deep_researcher_interface():
+    """Interface for the Deep Researcher Agent"""
+    st.markdown('''
+    <div class="slide-up">
+        <div style="background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%); 
+                    padding: 2rem; border-radius: 16px; margin-bottom: 2rem; 
+                    border: 1px solid var(--border-color); position: relative; overflow: hidden;">
+            <div style="position: absolute; top: 0; left: 0; right: 0; height: 4px; 
+                        background: linear-gradient(90deg, #8b5cf6 0%, #a855f7 100%);"></div>
+            <h2 style="color: #8b5cf6; font-size: 2rem; font-weight: 700; 
+                       margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.75rem;">
+                🔍 Deep Researcher Agent
+            </h2>
+            <p style="color: var(--text-secondary); font-size: 1.1rem; margin: 0; line-height: 1.6;">
+                Extract links from PDF documents and perform deep content analysis with intelligent filtering.<br/>
+                <strong>Features:</strong> PDF link extraction, content scraping, and automated report generation.
+            </p>
+        </div>
+    </div>
+    ''', unsafe_allow_html=True)
+    
+    if not st.session_state.deep_researcher_agent:
+        st.markdown('''
+        <div style="background: linear-gradient(135deg, #374151 0%, #4b5563 100%); 
+                    padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-color); 
+                    margin: 2rem 0; text-align: center;">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">⚠️</div>
+            <div style="color: var(--warning-color); font-weight: 600; font-size: 1.1rem;">
+                Please initialize the agents first using the sidebar.
+            </div>
+        </div>
+        ''', unsafe_allow_html=True)
+        return
+    
+    # Deep research configuration
+    with st.expander("🔧 Deep Research Configuration", expanded=False):
+        col1, col2 = st.columns(2)
+        with col1:
+            max_links = st.slider("Maximum links to extract", 5, 50, 15)
+            include_images = st.checkbox("Include images in scraping", value=True)
+        with col2:
+            filter_domains = st.text_input(
+                "Filter domains (comma-separated)", 
+                placeholder="arxiv.org, github.com, nature.com",
+                help="Only extract links from specific domains (optional)"
+            )
+            save_to_deep_research = st.checkbox("Save to deep research directory", value=True)
+    
+    # PDF upload interface
+    st.markdown('''
+    <div style="margin: 2rem 0;">
+        <h3 style="color: #8b5cf6; font-weight: 600; margin-bottom: 1rem; 
+                   font-size: 1.3rem; display: flex; align-items: center; gap: 0.5rem;">
+            📄 PDF Document Upload
+        </h3>
+        <p style="color: var(--text-secondary); margin-bottom: 1rem; font-size: 0.95rem;">
+            Upload a PDF document to extract links and perform deep research analysis.
+        </p>
+    </div>
+    ''', unsafe_allow_html=True)
+    
+    uploaded_pdf = st.file_uploader(
+        "Choose a PDF file",
+        type=['pdf'],
+        help="Upload a PDF document for link extraction and deep analysis"
+    )
+    
+    if uploaded_pdf is not None:
+        col1, col2 = st.columns([2, 1])
+        with col1:
+            if st.button("🔍 Start Deep Research", type="primary", key="start_deep_research_btn"):
+                execute_deep_research(
+                    uploaded_pdf, max_links, include_images, 
+                    filter_domains, save_to_deep_research
+                )
+        with col2:
+            st.info(f"File: {uploaded_pdf.name} ({uploaded_pdf.size} bytes)")
+    
+    # Display recent deep research results
+    if st.session_state.deep_research_results:
+        st.markdown("### 🔍 Recent Deep Research Results")
+        for i, result in enumerate(reversed(st.session_state.deep_research_results[-3:])):
+            with st.expander(f"📄 {result['filename']} ({result['timestamp']})"):
+                display_deep_research_result(result)
+
+def execute_deep_research(uploaded_pdf, max_links: int, include_images: bool, 
+                         filter_domains: str, save_to_deep_research: bool):
+    """Execute deep research with the uploaded PDF"""
+    try:
+        with st.spinner("🔍 Performing deep research..."):
+            progress_bar = st.progress(0)
+            status_text = st.empty()
+            
+            # Save uploaded PDF temporarily
+            import tempfile
+            with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_file:
+                tmp_file.write(uploaded_pdf.getvalue())
+                tmp_file_path = tmp_file.name
+            
+            # Step 1: Extract links from PDF
+            status_text.text("Extracting links from PDF...")
+            progress_bar.progress(25)
+            
+            # Parse filter domains
+            domain_list = []
+            if filter_domains.strip():
+                domain_list = [domain.strip() for domain in filter_domains.split(',') if domain.strip()]
+            
+            # Perform deep research
+            result = st.session_state.deep_researcher_agent.deep_research(
+                pdf_path=tmp_file_path,
+                max_links=max_links,
+                filter_domains=domain_list,
+                include_images=include_images
+            )
+            
+            progress_bar.progress(75)
+            status_text.text("Generating comprehensive report...")
+            
+            # Save results to deep research directory if requested
+            saved_files = []
+            if save_to_deep_research:
+                saved_files = save_deep_research_results(result, uploaded_pdf.name)
+            
+            # Store result
+            deep_research_data = {
+                'filename': uploaded_pdf.name,
+                'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                'result': result,
+                'saved_files': saved_files,
+                'config': {
+                    'max_links': max_links,
+                    'include_images': include_images,
+                    'filter_domains': domain_list,
+                    'save_to_deep_research': save_to_deep_research
+                }
+            }
+            st.session_state.deep_research_results.append(deep_research_data)
+            
+            # Clean up temp file
+            os.unlink(tmp_file_path)
+            
+            progress_bar.progress(100)
+            status_text.text("✅ Deep research completed!")
+            
+            # Display results
+            st.success("🎉 Deep research completed successfully!")
+            display_deep_research_result(deep_research_data)
+            
+    except Exception as e:
+        st.error(f"❌ Deep research failed: {str(e)}")
+
+def save_deep_research_results(result, original_filename: str) -> List[str]:
+    """Save deep research results to the deep research directory"""
+    saved_files = []
+    
+    try:
+        # Create timestamp for unique filenames
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        base_name = os.path.splitext(original_filename)[0]
+        
+        # Save comprehensive report as text file
+        report_filename = f"deep_research_{base_name}_{timestamp}.txt"
+        report_path = os.path.join("deep research", report_filename)
+        
+        with open(report_path, 'w', encoding='utf-8') as f:
+            f.write(f"Deep Research Report\n")
+            f.write(f"{'=' * 50}\n\n")
+            f.write(f"Source PDF: {original_filename}\n")
+            f.write(f"Analysis Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+            f.write(f"Total Links Found: {result.total_links_found}\n")
+            f.write(f"Successful Scrapes: {result.successful_scrapes}\n\n")
+            
+            f.write(f"Summary:\n{'-' * 20}\n{result.summary}\n\n")
+            
+            f.write(f"Extracted Links:\n{'-' * 20}\n")
+            for i, link in enumerate(result.extracted_links, 1):
+                f.write(f"{i}. {link.url}\n")
+                if link.text:
+                    f.write(f"   Text: {link.text}\n")
+                if link.context:
+                    f.write(f"   Context: {link.context}\n")
+                f.write(f"   Page: {link.page_number}\n\n")
+            
+            f.write(f"Scraped Content:\n{'-' * 20}\n")
+            for i, content in enumerate(result.scraped_content, 1):
+                f.write(f"{i}. {content.url}\n")
+                f.write(f"   Title: {content.title}\n")
+                f.write(f"   Success: {content.success}\n")
+                if content.success:
+                    f.write(f"   Content: {content.clean_text[:500]}...\n")
+                else:
+                    f.write(f"   Error: {content.error}\n")
+                f.write("\n")
+        
+        saved_files.append(report_path)
+        
+        # Save as JSON for structured data
+        json_filename = f"deep_research_{base_name}_{timestamp}.json"
+        json_path = os.path.join("deep research", json_filename)
+        
+        # Convert result to JSON-serializable format
+        json_data = {
+            'source_pdf': original_filename,
+            'timestamp': result.timestamp.isoformat(),
+            'total_links_found': result.total_links_found,
+            'successful_scrapes': result.successful_scrapes,
+            'summary': result.summary,
+            'extracted_links': [
+                {
+                    'url': link.url,
+                    'text': link.text,
+                    'page_number': link.page_number,
+                    'context': link.context
+                }
+                for link in result.extracted_links
+            ],
+            'scraped_content': [
+                {
+                    'url': content.url,
+                    'title': content.title,
+                    'success': content.success,
+                    'clean_text': content.clean_text,
+                    'error': content.error
+                }
+                for content in result.scraped_content
+            ]
+        }
+        
+        with open(json_path, 'w', encoding='utf-8') as f:
+            json.dump(json_data, f, indent=2, ensure_ascii=False)
+        
+        saved_files.append(json_path)
+        
+    except Exception as e:
+        st.warning(f"Could not save deep research results: {str(e)}")
+    
+    return saved_files
+
+def display_deep_research_result(deep_research_data: Dict[str, Any]):
+    """Display deep research result in a formatted way"""
+    result = deep_research_data['result']
+    
+    # Summary metrics
+    st.markdown("#### 📋 Deep Research Summary")
+    col1, col2, col3, col4 = st.columns(4)
+    with col1:
+        st.metric("Links Found", result.total_links_found)
+    with col2:
+        st.metric("Successful Scrapes", result.successful_scrapes)
+    with col3:
+        scrape_rate = (result.successful_scrapes / max(result.total_links_found, 1)) * 100
+        st.metric("Success Rate", f"{scrape_rate:.1f}%")
+    with col4:
+        if deep_research_data['saved_files']:
+            st.metric("Files Generated", len(deep_research_data['saved_files']))
+    
+    # Analysis summary
+    if result.summary:
+        st.markdown("#### 💡 Analysis Summary")
+        st.write(result.summary)
+    
+    # Extracted links
+    if result.extracted_links:
+        st.markdown("#### 🔗 Extracted Links")
+        for i, link in enumerate(result.extracted_links[:10], 1):  # Show first 10
+            with st.expander(f"Link {i}: {link.url[:50]}..."):
+                st.markdown(f"**URL:** [{link.url}]({link.url})")
+                st.markdown(f"**Page:** {link.page_number}")
+                if link.text:
+                    st.markdown(f"**Text:** {link.text}")
+                if link.context:
+                    st.markdown(f"**Context:** {link.context}")
+        
+        if len(result.extracted_links) > 10:
+            st.info(f"... and {len(result.extracted_links) - 10} more links")
+    
+    # Scraped content preview
+    successful_content = [c for c in result.scraped_content if c.success]
+    if successful_content:
+        st.markdown("#### 📄 Scraped Content Preview")
+        for i, content in enumerate(successful_content[:3], 1):  # Show first 3
+            with st.expander(f"Content {i}: {content.title or content.url[:50]}"):
+                st.markdown(f"**URL:** [{content.url}]({content.url})")
+                if content.title:
+                    st.markdown(f"**Title:** {content.title}")
+                if content.clean_text:
+                    st.markdown(f"**Content Preview:**")
+                    st.text_area(
+                        "", 
+                        content.clean_text[:300] + "..." if len(content.clean_text) > 300 else content.clean_text,
+                        height=100, 
+                        disabled=True,
+                        key=f"content_preview_{i}_{deep_research_data['timestamp']}"
+                    )
+    
+    # Download generated files
+    if deep_research_data['saved_files']:
+        st.markdown("#### 📁 Generated Files")
+        for file_path in deep_research_data['saved_files']:
+            if os.path.exists(file_path):
+                with open(file_path, 'rb') as f:
+                    st.download_button(
+                        label=f"📥 Download {os.path.basename(file_path)}",
+                        data=f.read(),
+                        file_name=os.path.basename(file_path),
+                        mime="application/octet-stream",
+                        key=f"download_deep_research_{deep_research_data['timestamp']}_{os.path.basename(file_path)}"
+                    )
 
 if __name__ == "__main__":
     main()

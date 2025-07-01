@@ -346,6 +346,13 @@ class ResearchAgent(BaseAgent):
         
         filename = task.parameters.get("filename", f"research_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf")
         
+        # Ensure filename is in research directory
+        if not filename.startswith("research"):
+            filename = os.path.join("research", filename)
+        
+        # Create research directory if it doesn't exist
+        os.makedirs(os.path.dirname(filename), exist_ok=True)
+        
         if not self.pdf_available:
             # Fallback to text file
             text_filename = filename.replace('.pdf', '.txt')
@@ -399,6 +406,13 @@ class ResearchAgent(BaseAgent):
     
     def _generate_text_report(self, research_result: Dict[str, Any], filename: str) -> str:
         """Generate a text report as fallback"""
+        # Ensure filename is in research directory
+        if not filename.startswith("research"):
+            filename = os.path.join("research", filename)
+        
+        # Create research directory if it doesn't exist
+        os.makedirs(os.path.dirname(filename), exist_ok=True)
+        
         with open(filename, 'w', encoding='utf-8') as f:
             f.write(f"Research Report: {research_result['query']}\n")
             f.write("=" * 50 + "\n\n")
@@ -437,6 +451,13 @@ class ResearchAgent(BaseAgent):
             raise ValueError("research_result parameter is required")
         
         filename = task.parameters.get("filename", f"research_analysis_{datetime.now().strftime('%Y%m%d_%H%M%S')}.ipynb")
+        
+        # Ensure filename is in research directory
+        if not filename.startswith("research"):
+            filename = os.path.join("research", filename)
+        
+        # Create research directory if it doesn't exist
+        os.makedirs(os.path.dirname(filename), exist_ok=True)
         
         # Create notebook structure
         query = research_result['query']
