@@ -17,6 +17,7 @@ try:
     REQUESTS_AVAILABLE = True
 except ImportError:
     REQUESTS_AVAILABLE = False
+    BeautifulSoup = None
     logging.warning("Requests and BeautifulSoup not available")
 
 try:
@@ -314,7 +315,7 @@ class WebscraperAgent(BaseAgent):
         
         return result
     
-    def _extract_text_content(self, soup: BeautifulSoup) -> str:
+    def _extract_text_content(self, soup: "BeautifulSoup") -> str:
         """
         Extract clean text content from HTML
         
@@ -338,7 +339,7 @@ class WebscraperAgent(BaseAgent):
         
         return text
     
-    def _extract_links(self, soup: BeautifulSoup, base_url: str) -> List[str]:
+    def _extract_links(self, soup: "BeautifulSoup", base_url: str) -> List[str]:
         """
         Extract all links from the page
         
@@ -357,7 +358,7 @@ class WebscraperAgent(BaseAgent):
                 links.append(absolute_url)
         return links
     
-    def _extract_images(self, soup: BeautifulSoup, base_url: str) -> List[str]:
+    def _extract_images(self, soup: "BeautifulSoup", base_url: str) -> List[str]:
         """
         Extract all image URLs from the page
         
@@ -376,7 +377,7 @@ class WebscraperAgent(BaseAgent):
                 images.append(absolute_url)
         return images
     
-    def _extract_metadata(self, soup: BeautifulSoup, response=None) -> Dict[str, Any]:
+    def _extract_metadata(self, soup: "BeautifulSoup", response=None) -> Dict[str, Any]:
         """
         Extract metadata from the page
         
@@ -409,7 +410,7 @@ class WebscraperAgent(BaseAgent):
         
         return metadata
     
-    def _extract_selenium_metadata(self, driver, soup: BeautifulSoup) -> Dict[str, Any]:
+    def _extract_selenium_metadata(self, driver, soup: "BeautifulSoup") -> Dict[str, Any]:
         """
         Extract metadata when using Selenium
         

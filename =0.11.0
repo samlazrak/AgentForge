@@ -1,0 +1,29 @@
+Collecting pdfplumber
+  Downloading pdfplumber-0.11.7-py3-none-any.whl.metadata (42 kB)
+Collecting pdfminer.six==20250506 (from pdfplumber)
+  Downloading pdfminer_six-20250506-py3-none-any.whl.metadata (4.2 kB)
+Collecting Pillow>=9.1 (from pdfplumber)
+  Downloading pillow-11.3.0-cp313-cp313-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (9.0 kB)
+Collecting pypdfium2>=4.18.0 (from pdfplumber)
+  Downloading pypdfium2-4.30.1-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (48 kB)
+Collecting charset-normalizer>=2.0.0 (from pdfminer.six==20250506->pdfplumber)
+  Using cached charset_normalizer-3.4.2-cp313-cp313-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (35 kB)
+Collecting cryptography>=36.0.0 (from pdfminer.six==20250506->pdfplumber)
+  Using cached cryptography-45.0.4-cp311-abi3-manylinux_2_34_x86_64.whl.metadata (5.7 kB)
+Collecting cffi>=1.14 (from cryptography>=36.0.0->pdfminer.six==20250506->pdfplumber)
+  Using cached cffi-1.17.1-cp313-cp313-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (1.5 kB)
+Collecting pycparser (from cffi>=1.14->cryptography>=36.0.0->pdfminer.six==20250506->pdfplumber)
+  Using cached pycparser-2.22-py3-none-any.whl.metadata (943 bytes)
+Downloading pdfplumber-0.11.7-py3-none-any.whl (60 kB)
+Downloading pdfminer_six-20250506-py3-none-any.whl (5.6 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.6/5.6 MB 230.9 MB/s eta 0:00:00
+Downloading pillow-11.3.0-cp313-cp313-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (6.6 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.6/6.6 MB 223.3 MB/s eta 0:00:00
+Downloading pypdfium2-4.30.1-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (2.9 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.9/2.9 MB 139.9 MB/s eta 0:00:00
+Using cached charset_normalizer-3.4.2-cp313-cp313-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (148 kB)
+Using cached cryptography-45.0.4-cp311-abi3-manylinux_2_34_x86_64.whl (4.5 MB)
+Using cached cffi-1.17.1-cp313-cp313-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (479 kB)
+Using cached pycparser-2.22-py3-none-any.whl (117 kB)
+Installing collected packages: pypdfium2, pycparser, Pillow, charset-normalizer, cffi, cryptography, pdfminer.six, pdfplumber
+Successfully installed Pillow-11.3.0 cffi-1.17.1 charset-normalizer-3.4.2 cryptography-45.0.4 pdfminer.six-20250506 pdfplumber-0.11.7 pycparser-2.22 pypdfium2-4.30.1
