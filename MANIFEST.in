@@ -1,0 +1,41 @@
+# Include the README and other important files
+include README.md
+include LICENSE
+include CHANGELOG.md
+include requirements.txt
+include pyproject.toml
+
+# Include all Python files
+recursive-include deep_research *.py
+
+# Include package data
+recursive-include deep_research *.txt
+recursive-include deep_research *.md
+recursive-include deep_research *.yaml
+recursive-include deep_research *.yml
+recursive-include deep_research *.json
+
+# Include tests
+recursive-include tests *.py
+
+# Include documentation
+recursive-include docs *.md
+recursive-include docs *.rst
+recursive-include docs *.txt
+
+# Exclude compiled Python files
+global-exclude *.pyc
+global-exclude *.pyo
+global-exclude __pycache__
+global-exclude .DS_Store
+global-exclude *.so
+
+# Exclude development and build artifacts
+exclude .gitignore
+exclude .pre-commit-config.yaml
+exclude tox.ini
+exclude .github
+recursive-exclude .github *
+recursive-exclude build *
+recursive-exclude dist *
+recursive-exclude *.egg-info *
