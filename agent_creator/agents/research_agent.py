@@ -281,8 +281,18 @@ class ResearchAgent(BaseAgent):
         Summary:
         """
         
-        summary = self.llm.generate_response(prompt, max_tokens=1000)
-        return summary
+        try:
+            summary = self.llm.generate_response(prompt, max_tokens=1000)
+            # Ensure summary is not None and is a string
+            if summary is None:
+                summary = f"Research completed on '{query}' with {len(sources)} sources analyzed. Analysis includes evaluation of relevant information from web sources and academic materials."
+            elif not isinstance(summary, str):
+                summary = str(summary)
+            return summary
+        except Exception as e:
+            self.logger.error(f"Failed to generate summary with LLM: {e}")
+            # Fallback summary generation
+            return f"Research completed on '{query}' with {len(sources)} sources analyzed. Analysis includes evaluation of relevant information from web sources and academic materials."
     
     def _generate_citations(self, sources: List[Source]) -> List[str]:
         """
@@ -346,12 +356,20 @@ class ResearchAgent(BaseAgent):
         
         filename = task.parameters.get("filename", f"research_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf")
         
-        # Ensure filename is in research directory
-        if not filename.startswith("research"):
+        # Ensure filename is in research directory - Fix the logic here
+        if not filename.startswith("research/") and not filename.startswith("research\\"):
             filename = os.path.join("research", filename)
         
-        # Create research directory if it doesn't exist
-        os.makedirs(os.path.dirname(filename), exist_ok=True)
+        # Create research directory if it doesn't exist - Fix directory creation logic
+        dirname = os.path.dirname(filename)
+        if dirname and not os.path.exists(dirname):
+            try:
+                os.makedirs(dirname, exist_ok=True)
+                self.logger.info(f"Created directory: {dirname}")
+            except OSError as e:
+                self.logger.error(f"Failed to create directory {dirname}: {e}")
+                # Fallback: use current directory
+                filename = os.path.basename(filename)
         
         if not self.pdf_available:
             # Fallback to text file
@@ -406,35 +424,48 @@ class ResearchAgent(BaseAgent):
     
     def _generate_text_report(self, research_result: Dict[str, Any], filename: str) -> str:
         """Generate a text report as fallback"""
-        # Ensure filename is in research directory
-        if not filename.startswith("research"):
+        # Ensure filename is in research directory - Fix the logic here  
+        if not filename.startswith("research/") and not filename.startswith("research\\"):
             filename = os.path.join("research", filename)
         
-        # Create research directory if it doesn't exist
-        os.makedirs(os.path.dirname(filename), exist_ok=True)
+        # Create research directory if it doesn't exist - Fix directory creation logic
+        dirname = os.path.dirname(filename)
+        if dirname and not os.path.exists(dirname):
+            try:
+                os.makedirs(dirname, exist_ok=True)
+                self.logger.info(f"Created directory: {dirname}")
+            except OSError as e:
+                self.logger.error(f"Failed to create directory {dirname}: {e}")
+                # Fallback: use current directory
+                filename = os.path.basename(filename)
         
-        with open(filename, 'w', encoding='utf-8') as f:
-            f.write(f"Research Report: {research_result['query']}\n")
-            f.write("=" * 50 + "\n\n")
+        try:
+            with open(filename, 'w', encoding='utf-8') as f:
+                f.write(f"Research Report: {research_result['query']}\n")
+                f.write("=" * 50 + "\n\n")
+                
+                f.write("Executive Summary\n")
+                f.write("-" * 20 + "\n")
+                f.write(research_result['summary'] + "\n\n")
+                
+                f.write("Sources\n")
+                f.write("-" * 10 + "\n")
+                for source in research_result['sources']:
+                    f.write(f"Title: {source['title']}\n")
+                    f.write(f"URL: {source['url']}\n")
+                    f.write(f"Snippet: {source['snippet']}\n")
+                    f.write("\n")
+                
+                f.write("Citations\n")
+                f.write("-" * 10 + "\n")
+                for citation in research_result['citations']:
+                    f.write(citation + "\n")
             
-            f.write("Executive Summary\n")
-            f.write("-" * 20 + "\n")
-            f.write(research_result['summary'] + "\n\n")
-            
-            f.write("Sources\n")
-            f.write("-" * 10 + "\n")
-            for source in research_result['sources']:
-                f.write(f"Title: {source['title']}\n")
-                f.write(f"URL: {source['url']}\n")
-                f.write(f"Snippet: {source['snippet']}\n")
-                f.write("\n")
-            
-            f.write("Citations\n")
-            f.write("-" * 10 + "\n")
-            for citation in research_result['citations']:
-                f.write(citation + "\n")
-        
-        return filename
+            self.logger.info(f"Text report generated: {filename}")
+            return filename
+        except Exception as e:
+            self.logger.error(f"Failed to generate text report: {e}")
+            raise
     
     def _generate_notebook(self, task: AgentTask) -> str:
         """
@@ -452,12 +483,20 @@ class ResearchAgent(BaseAgent):
         
         filename = task.parameters.get("filename", f"research_analysis_{datetime.now().strftime('%Y%m%d_%H%M%S')}.ipynb")
         
-        # Ensure filename is in research directory
-        if not filename.startswith("research"):
+        # Ensure filename is in research directory - Fix the logic here
+        if not filename.startswith("research/") and not filename.startswith("research\\"):
             filename = os.path.join("research", filename)
         
-        # Create research directory if it doesn't exist
-        os.makedirs(os.path.dirname(filename), exist_ok=True)
+        # Create research directory if it doesn't exist - Fix directory creation logic
+        dirname = os.path.dirname(filename)
+        if dirname and not os.path.exists(dirname):
+            try:
+                os.makedirs(dirname, exist_ok=True)
+                self.logger.info(f"Created directory: {dirname}")
+            except OSError as e:
+                self.logger.error(f"Failed to create directory {dirname}: {e}")
+                # Fallback: use current directory
+                filename = os.path.basename(filename)
         
         # Create notebook structure
         query = research_result['query']
@@ -562,16 +601,42 @@ for i, citation in enumerate(research_data.get('citations', []), 1):
         }
         
         # Write notebook to file
-        with open(filename, 'w', encoding='utf-8') as f:
-            json.dump(notebook, f, indent=2, ensure_ascii=False)
-        
-        self.logger.info(f"Jupyter notebook generated: {filename}")
-        return filename
+        try:
+            with open(filename, 'w', encoding='utf-8') as f:
+                json.dump(notebook, f, indent=2, ensure_ascii=False)
+            
+            self.logger.info(f"Jupyter notebook generated: {filename}")
+            return filename
+        except Exception as e:
+            self.logger.error(f"Failed to generate notebook: {e}")
+            raise
     
     def set_webscraper_agent(self, webscraper_agent):
         """Set the webscraper agent for content extraction"""
         self.webscraper_agent = webscraper_agent
         self.logger.info("Webscraper agent set for content extraction")
+    
+    def _sanitize_filename(self, text: str) -> str:
+        """
+        Sanitize text for use in filenames
+        
+        Args:
+            text: Input text
+            
+        Returns:
+            Sanitized filename string
+        """
+        # Remove or replace problematic characters
+        import re
+        # Replace problematic characters with underscores
+        sanitized = re.sub(r'[<>:"/\\|?*\[\]{}]', '_', text)
+        # Replace spaces with underscores
+        sanitized = sanitized.replace(' ', '_')
+        # Remove multiple consecutive underscores
+        sanitized = re.sub(r'_+', '_', sanitized)
+        # Remove leading/trailing underscores
+        sanitized = sanitized.strip('_')
+        return sanitized
     
     def research_topic(self, query: str, max_results: int = 10, generate_pdf: bool = True, generate_notebook: bool = True) -> Dict[str, Any]:
         """
@@ -600,12 +665,16 @@ for i, citation in enumerate(research_data.get('citations', []), 1):
             "files_generated": []
         }
         
+        # Sanitize query for filename use
+        sanitized_query = self._sanitize_filename(query)[:20]
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        
         # Generate PDF if requested
         if generate_pdf:
             pdf_task_id = self.create_task("generate_pdf", {
                 "type": "generate_pdf",
                 "research_result": research_result.__dict__,
-                "filename": f"research_{query.replace(' ', '_')[:20]}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
+                "filename": f"research_{sanitized_query}_{timestamp}.pdf"
             })
             pdf_path = self.run_task(pdf_task_id)
             result["files_generated"].append(pdf_path)
@@ -615,7 +684,7 @@ for i, citation in enumerate(research_data.get('citations', []), 1):
             notebook_task_id = self.create_task("generate_notebook", {
                 "type": "generate_notebook",
                 "research_result": research_result.__dict__,
-                "filename": f"research_{query.replace(' ', '_')[:20]}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.ipynb"
+                "filename": f"research_{sanitized_query}_{timestamp}.ipynb"
             })
             notebook_path = self.run_task(notebook_task_id)
             result["files_generated"].append(notebook_path)

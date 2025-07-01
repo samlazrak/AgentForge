@@ -12,3 +12,8 @@
 .pytest_cache
 .ipynb_checkpoints
 __pycache__
+deep_research/
+research/
+visualizations/
+research/
+deep research/

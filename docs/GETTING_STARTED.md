@@ -190,6 +190,67 @@ result = research_agent.research_topic(
 print(f"Enhanced research completed with {len(result['research_result'].sources)} sources")
 ```
 
+## 🧠 Deep Researcher Agent
+
+The **Deep Researcher Agent** is a specialized agent designed for advanced research workflows that involve extracting links from PDF documents and performing deep, multi-level web content scraping and analysis. It is ideal for scenarios where you want to start from a research paper or report (PDF), extract all referenced or embedded links, and then recursively analyze the content behind those links.
+
+### Key Capabilities
+
+- **PDF Link Extraction**: Automatically extracts hyperlinks from PDF files, including both annotated links and URLs found in the text. Each link includes context, page number, and optional bounding box information.
+- **Content Scraping**: Scrapes the content of extracted links, optionally including images and metadata. Can use a connected `WebscraperAgent` for robust scraping.
+- **Content Filtering**: Cleans and filters scraped content to remove noise, limit length, and focus on relevant information.
+- **Deep Analysis**: Performs multi-level (recursive) scraping, following links found in the initially scraped pages, up to a configurable depth and breadth.
+- **Link Validation**: Validates URLs for correctness and relevance, using heuristics and domain filtering.
+- **Multi-level Scraping**: Supports recursive scraping with configurable depth, link limits per level, and domain restrictions.
+- **Network Analysis**: Builds a network graph of parent and child links discovered during the scraping process, allowing for analysis of the link structure and content relationships.
+- **Summary Generation**: Uses an LLM to generate a comprehensive summary of the research findings, including key themes, insights, and a quality assessment of the extracted content.
+- **Convenience Methods**: Provides high-level methods for extracting links, scraping content, and performing the full deep research workflow with a single call.
+
+### Example Usage
+
+```python
+from agent_creator import DeepResearcherAgent
+
+agent = DeepResearcherAgent()
+result = agent.deep_research(
+    pdf_path="path/to/your.pdf",
+    max_links=15,
+    filter_domains=["arxiv.org", "nature.com"],
+    include_images=True,
+    max_depth=2,
+    use_multi_level=True
+)
+
+print(result.summary)
+print(f"Total links found: {result.total_links_found}")
+print(f"Successful scrapes: {result.successful_scrapes}")
+print(f"Max depth reached: {result.max_depth_reached}")
+```
+
+### Typical Workflow
+
+1. **Extract Links**: Parse a PDF to extract all hyperlinks and referenced URLs.
+2. **Filter Links**: Optionally filter links by allowed or blocked domains.
+3. **Scrape Content**: Visit each link and extract the main content, images, and metadata.
+4. **Recursive Scraping**: For each scraped page, extract further links and repeat the process up to the specified depth.
+5. **Analyze Network**: Build a network graph of all discovered links and their relationships.
+6. **Summarize Findings**: Generate a summary of the research, highlighting key insights and statistics.
+
+### Configuration Options
+
+- `max_depth`: Maximum recursion depth for multi-level scraping.
+- `max_links_per_level`: Maximum number of links to follow per level.
+- `max_total_links`: Global cap on the number of links to scrape.
+- `delay_between_requests`: Delay between HTTP requests to avoid rate limiting.
+- `allowed_domains` / `blocked_domains`: Restrict scraping to certain domains.
+- `relevance_threshold`: Heuristic threshold for determining if a link is relevant.
+
+### When to Use
+
+- When you need to analyze all references in a PDF and their web content.
+- For building a networked map of research sources and their interconnections.
+- For deep, automated literature or web reviews starting from a single document.
+
 ## 🎯 Jupyter Notebook Demo
 
 Explore the interactive demo:

@@ -12,6 +12,7 @@ import json
 from datetime import datetime
 from typing import Dict, Any, List
 import logging
+import hashlib
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -534,6 +535,22 @@ if 'deep_research_results' not in st.session_state:
 def initialize_agents():
     """Initialize the research and webscraper agents"""
     try:
+        # First, organize research files if the script exists
+        try:
+            import subprocess
+            import sys
+            from pathlib import Path
+            
+            if Path("move_research_files.py").exists():
+                st.info("🗂️ Organizing research files...")
+                result = subprocess.run([sys.executable, "move_research_files.py"], 
+                                      capture_output=True, text=True, check=True)
+                if "files moved:" in result.stdout and "0" not in result.stdout.split("files moved:")[1].split("\n")[0]:
+                    st.success("✅ Research files organized successfully!")
+        except Exception as e:
+            # Don't fail initialization if file organization fails
+            st.warning(f"⚠️ Could not organize research files: {e}")
+        
         # Create directories if they don't exist
         os.makedirs("research", exist_ok=True)
         os.makedirs("deep research", exist_ok=True)
@@ -1477,12 +1494,16 @@ def display_research_result(research_data: Dict[str, Any]):
         for i, file_path in enumerate(result['files_generated']):
             if os.path.exists(file_path):
                 with open(file_path, 'rb') as f:
+                    # Create a unique key that includes result ID and file path hash
+                    file_hash = hashlib.md5(file_path.encode()).hexdigest()[:8]
+                    unique_key = f"download_{research_data.get('id', 'unknown')}_{i}_{file_hash}"
+                    
                     st.download_button(
                         label=f"📥 Download {os.path.basename(file_path)}",
                         data=f.read(),
                         file_name=os.path.basename(file_path),
                         mime="application/octet-stream",
-                        key=f"download_research_{research_data['timestamp']}_{i}_{os.path.basename(file_path)}"
+                        key=unique_key
                     )
 
 def display_scraping_result(result):
@@ -2036,7 +2057,7 @@ def display_deep_research_result(deep_research_data: Dict[str, Any]):
                         content.clean_text[:300] + "..." if len(content.clean_text) > 300 else content.clean_text,
                         height=100, 
                         disabled=True,
-                        key=f"content_preview_{i}_{deep_research_data['timestamp']}"
+                        key=f"content_preview_{i}_{hash(content.url)}_{deep_research_data['timestamp'].replace(' ', '_').replace(':', '_')}"
                     )
     
     # Download generated files
