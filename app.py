@@ -18,7 +18,7 @@ logging.basicConfig(level=logging.INFO)
 
 # Import our agents
 try:
-    from agent_creator import ResearchAgent, WebscraperAgent, LLMInterface
+    from agent_creator import ResearchAgent, WebscraperAgent, DataAnalysisAgent, LLMInterface
     from agent_creator.core.base_agent import AgentConfig
     from agent_creator.agents.webscraper_agent import ScrapingConfig
 except ImportError as e:
@@ -518,10 +518,14 @@ if 'research_agent' not in st.session_state:
     st.session_state.research_agent = None
 if 'webscraper_agent' not in st.session_state:
     st.session_state.webscraper_agent = None
+if 'data_analysis_agent' not in st.session_state:
+    st.session_state.data_analysis_agent = None
 if 'research_results' not in st.session_state:
     st.session_state.research_results = []
 if 'scraping_results' not in st.session_state:
     st.session_state.scraping_results = []
+if 'analysis_results' not in st.session_state:
+    st.session_state.analysis_results = []
 
 def initialize_agents():
     """Initialize the research and webscraper agents"""
@@ -553,12 +557,24 @@ def initialize_agents():
         )
         st.session_state.webscraper_agent = WebscraperAgent(webscraper_config, scraping_config)
         
+        # Initialize Data Analysis Agent
+        data_analysis_config = AgentConfig(
+            name="StreamlitDataAnalysisAgent",
+            description="AI-powered data analysis agent for comprehensive data processing",
+            capabilities=[
+                "file_analysis", "statistical_analysis", "visualization_generation",
+                "correlation_analysis", "data_quality_check", "report_generation"
+            ]
+        )
+        st.session_state.data_analysis_agent = DataAnalysisAgent(data_analysis_config)
+        
         # Connect webscraper to research agent
         st.session_state.research_agent.set_webscraper_agent(st.session_state.webscraper_agent)
         
         # Start agents
         st.session_state.research_agent.start()
         st.session_state.webscraper_agent.start()
+        st.session_state.data_analysis_agent.start()
         
         return True
     except Exception as e:
@@ -636,6 +652,13 @@ def main():
         else:
             st.markdown('<div class="status-error">🕷️ Webscraper Agent: Offline</div>', 
                        unsafe_allow_html=True)
+            
+        if st.session_state.data_analysis_agent:
+            st.markdown('<div class="status-success">📊 Data Analysis Agent: Online</div>', 
+                       unsafe_allow_html=True)
+        else:
+            st.markdown('<div class="status-error">📊 Data Analysis Agent: Offline</div>', 
+                       unsafe_allow_html=True)
         
         # Enhanced Statistics
         st.markdown('''
@@ -647,7 +670,7 @@ def main():
         </div>
         ''', unsafe_allow_html=True)
         
-        col1, col2 = st.columns(2)
+        col1, col2, col3 = st.columns(3)
         with col1:
             st.metric(
                 "Research Tasks", 
@@ -662,9 +685,16 @@ def main():
                 delta=None,
                 help="Total web scraping tasks completed"
             )
+        with col3:
+            st.metric(
+                "Analysis Tasks", 
+                len(st.session_state.analysis_results),
+                delta=None,
+                help="Total data analysis tasks completed"
+            )
         
         # Add quick stats
-        if st.session_state.research_results or st.session_state.scraping_results:
+        if st.session_state.research_results or st.session_state.scraping_results or st.session_state.analysis_results:
             st.markdown('''
             <div style="background: var(--background-secondary); padding: 1rem; 
                         border-radius: 8px; margin-top: 1rem; text-align: center;">
@@ -676,13 +706,13 @@ def main():
                 </div>
             </div>
             '''.format(
-                (len(st.session_state.research_results) + len(st.session_state.scraping_results)) * 10
+                (len(st.session_state.research_results) + len(st.session_state.scraping_results) + len(st.session_state.analysis_results)) * 10
             ), unsafe_allow_html=True)
     
     # Main content area
-    tab1, tab2, tab3, tab4 = st.tabs([
-        "🔬 Research Agent", "🕷️ Webscraper Agent", 
-        "📊 Results & Analytics", "📖 Documentation"
+    tab1, tab2, tab3, tab4, tab5 = st.tabs([
+        "🔬 Research Agent", "🕷️ Webscraper Agent", "📊 Data Analysis Agent",
+        "📈 Results & Analytics", "📖 Documentation"
     ])
     
     with tab1:
@@ -692,9 +722,12 @@ def main():
         webscraper_agent_interface()
     
     with tab3:
-        results_analytics()
+        data_analysis_agent_interface()
     
     with tab4:
+        results_analytics()
+    
+    with tab5:
         documentation_interface()
 
 def research_agent_interface():
@@ -971,6 +1004,330 @@ def link_extraction_interface():
     if st.button("🔗 Extract Links", type="primary", disabled=not url.strip(), key="extract_links_btn"):
         execute_link_extraction(url)
 
+def data_analysis_agent_interface():
+    """Interface for the Data Analysis Agent"""
+    st.markdown('''
+    <div class="slide-up">
+        <div style="background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%); 
+                    padding: 2rem; border-radius: 16px; margin-bottom: 2rem; 
+                    border: 1px solid var(--border-color); position: relative; overflow: hidden;">
+            <div style="position: absolute; top: 0; left: 0; right: 0; height: 4px; 
+                        background: linear-gradient(90deg, #f59e0b 0%, #d97706 100%);"></div>
+            <h2 style="color: #f59e0b; font-size: 2rem; font-weight: 700; 
+                       margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.75rem;">
+                📊 Data Analysis Agent
+            </h2>
+                         <p style="color: var(--text-secondary); font-size: 1.1rem; margin: 0; line-height: 1.6;">
+                 Comprehensive data analysis with automated visualization and statistical insights.<br/>
+                 <strong>New:</strong> ATF (Axon Text Format) file support for electrophysiology data analysis.
+             </p>
+        </div>
+    </div>
+    ''', unsafe_allow_html=True)
+    
+    if not st.session_state.data_analysis_agent:
+        st.markdown('''
+        <div style="background: linear-gradient(135deg, #374151 0%, #4b5563 100%); 
+                    padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-color); 
+                    margin: 2rem 0; text-align: center;">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">⚠️</div>
+            <div style="color: var(--warning-color); font-weight: 600; font-size: 1.1rem;">
+                Please initialize the agents first using the sidebar.
+            </div>
+        </div>
+        ''', unsafe_allow_html=True)
+        return
+    
+    # Analysis mode selection
+    mode = st.radio(
+        "Select analysis mode:",
+        ["File Upload", "Manual Data Entry", "Example Dataset"],
+        horizontal=True
+    )
+    
+    # Analysis configuration
+    with st.expander("🔧 Analysis Configuration", expanded=False):
+        col1, col2 = st.columns(2)
+        with col1:
+            analysis_type = st.selectbox(
+                "Analysis Type",
+                ["comprehensive", "statistical", "visualization", "correlation"]
+            )
+            generate_report = st.checkbox("Generate comprehensive report", value=True)
+        with col2:
+            create_visualizations = st.checkbox("Create visualizations", value=True)
+            perform_quality_check = st.checkbox("Perform data quality check", value=True)
+    
+    if mode == "File Upload":
+        file_upload_interface(analysis_type, generate_report, create_visualizations, perform_quality_check)
+    elif mode == "Manual Data Entry":
+        manual_data_interface(analysis_type, generate_report, create_visualizations, perform_quality_check)
+    else:
+        example_dataset_interface(analysis_type, generate_report, create_visualizations, perform_quality_check)
+    
+    # Display recent analysis results
+    if st.session_state.analysis_results:
+        st.markdown("### 📊 Recent Analysis Results")
+        for i, result in enumerate(reversed(st.session_state.analysis_results[-3:])):
+            with st.expander(f"📈 {result['type']} analysis ({result['timestamp']})"):
+                display_analysis_result(result)
+
+def file_upload_interface(analysis_type, generate_report, create_visualizations, perform_quality_check):
+    """Interface for file upload analysis"""
+    st.markdown('''
+    <div style="margin: 1.5rem 0;">
+        <h3 style="color: #f59e0b; font-weight: 600; margin-bottom: 1rem; 
+                   font-size: 1.3rem; display: flex; align-items: center; gap: 0.5rem;">
+            📁 File Upload Analysis
+        </h3>
+        <p style="color: var(--text-secondary); margin-bottom: 1rem; font-size: 0.95rem;">
+                         Upload a CSV, Excel, JSON, TSV, or ATF file for comprehensive data analysis.
+        </p>
+    </div>
+    ''', unsafe_allow_html=True)
+    
+    uploaded_file = st.file_uploader(
+        "Choose a data file",
+        type=['csv', 'xlsx', 'xls', 'json', 'tsv', 'atf'],
+        help="Supported formats: CSV, Excel (.xlsx, .xls), JSON, TSV, ATF (Axon Text Format)"
+    )
+    
+    if uploaded_file is not None:
+        col1, col2 = st.columns([2, 1])
+        with col1:
+            if st.button("🚀 Analyze Data", type="primary", key="analyze_file_btn"):
+                execute_file_analysis(uploaded_file, analysis_type, generate_report, create_visualizations, perform_quality_check)
+        with col2:
+            st.info(f"File: {uploaded_file.name} ({uploaded_file.size} bytes)")
+
+def manual_data_interface(analysis_type, generate_report, create_visualizations, perform_quality_check):
+    """Interface for manual data entry"""
+    st.markdown('''
+    <div style="margin: 1.5rem 0;">
+        <h3 style="color: #f59e0b; font-weight: 600; margin-bottom: 1rem; 
+                   font-size: 1.3rem; display: flex; align-items: center; gap: 0.5rem;">
+            ✏️ Manual Data Entry
+        </h3>
+        <p style="color: var(--text-secondary); margin-bottom: 1rem; font-size: 0.95rem;">
+            Enter your data manually in JSON format for analysis.
+        </p>
+    </div>
+    ''', unsafe_allow_html=True)
+    
+    data_input = st.text_area(
+        "Data (JSON format)",
+        placeholder='{"column1": [1, 2, 3], "column2": ["A", "B", "C"]}',
+        height=200,
+        help="Enter data in JSON format with column names as keys and arrays as values"
+    )
+    
+    col1, col2 = st.columns([2, 1])
+    with col1:
+        if st.button("🚀 Analyze Data", type="primary", disabled=not data_input.strip(), key="analyze_manual_data_btn"):
+            execute_manual_data_analysis(data_input, analysis_type, generate_report, create_visualizations, perform_quality_check)
+    with col2:
+        if st.button("📋 Example Data", key="example_data_btn"):
+            st.session_state.example_data = '{"age": [25, 30, 35, 40, 45], "salary": [50000, 60000, 70000, 80000, 90000], "department": ["IT", "Sales", "HR", "IT", "Sales"]}'
+            st.rerun()
+
+def example_dataset_interface(analysis_type, generate_report, create_visualizations, perform_quality_check):
+    """Interface for example dataset analysis"""
+    st.markdown('''
+    <div style="margin: 1.5rem 0;">
+        <h3 style="color: #f59e0b; font-weight: 600; margin-bottom: 1rem; 
+                   font-size: 1.3rem; display: flex; align-items: center; gap: 0.5rem;">
+            🎯 Example Dataset
+        </h3>
+        <p style="color: var(--text-secondary); margin-bottom: 1rem; font-size: 0.95rem;">
+            Use a built-in example dataset to explore the data analysis capabilities.
+        </p>
+    </div>
+    ''', unsafe_allow_html=True)
+    
+    dataset_choice = st.selectbox(
+        "Choose an example dataset:",
+        ["Employee Data", "Sales Data", "Weather Data"]
+    )
+    
+    col1, col2 = st.columns([2, 1])
+    with col1:
+        if st.button("🚀 Analyze Dataset", type="primary", key="analyze_example_btn"):
+            execute_example_dataset_analysis(dataset_choice, analysis_type, generate_report, create_visualizations, perform_quality_check)
+    with col2:
+        st.info(f"Dataset: {dataset_choice}")
+
+def execute_file_analysis(uploaded_file, analysis_type, generate_report, create_visualizations, perform_quality_check):
+    """Execute file analysis"""
+    try:
+        with st.spinner("📊 Analyzing uploaded file..."):
+            # Save uploaded file temporarily
+            import tempfile
+            with tempfile.NamedTemporaryFile(delete=False, suffix=f".{uploaded_file.name.split('.')[-1]}") as tmp_file:
+                tmp_file.write(uploaded_file.getvalue())
+                tmp_file_path = tmp_file.name
+            
+            # Analyze file
+            result = st.session_state.data_analysis_agent.analyze_file(tmp_file_path, analysis_type)
+            
+            # Store result
+            analysis_data = {
+                'type': 'file_upload',
+                'filename': uploaded_file.name,
+                'analysis_type': analysis_type,
+                'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                'result': result,
+                'config': {
+                    'generate_report': generate_report,
+                    'create_visualizations': create_visualizations,
+                    'perform_quality_check': perform_quality_check
+                }
+            }
+            st.session_state.analysis_results.append(analysis_data)
+            
+            # Clean up temp file
+            os.unlink(tmp_file_path)
+            
+            st.success("✅ Analysis completed successfully!")
+            display_analysis_result(analysis_data)
+            
+    except Exception as e:
+        st.error(f"❌ Analysis failed: {str(e)}")
+
+def execute_manual_data_analysis(data_input, analysis_type, generate_report, create_visualizations, perform_quality_check):
+    """Execute manual data analysis"""
+    try:
+        with st.spinner("📊 Analyzing manual data..."):
+            import json
+            data_dict = json.loads(data_input)
+            
+            # Analyze data
+            result = st.session_state.data_analysis_agent.analyze_dataframe(data_dict, analysis_type)
+            
+            # Store result
+            analysis_data = {
+                'type': 'manual_data',
+                'analysis_type': analysis_type,
+                'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                'result': result,
+                'config': {
+                    'generate_report': generate_report,
+                    'create_visualizations': create_visualizations,
+                    'perform_quality_check': perform_quality_check
+                }
+            }
+            st.session_state.analysis_results.append(analysis_data)
+            
+            st.success("✅ Analysis completed successfully!")
+            display_analysis_result(analysis_data)
+            
+    except json.JSONDecodeError:
+        st.error("❌ Invalid JSON format. Please check your data input.")
+    except Exception as e:
+        st.error(f"❌ Analysis failed: {str(e)}")
+
+def execute_example_dataset_analysis(dataset_choice, analysis_type, generate_report, create_visualizations, perform_quality_check):
+    """Execute example dataset analysis"""
+    try:
+        with st.spinner(f"📊 Analyzing {dataset_choice}..."):
+            # Create example data based on choice
+            if dataset_choice == "Employee Data":
+                data_dict = {
+                    "employee_id": list(range(1, 51)),
+                    "age": [25 + i % 40 for i in range(50)],
+                    "salary": [40000 + i * 1000 + (i % 10) * 500 for i in range(50)],
+                    "department": [["IT", "Sales", "HR", "Marketing", "Finance"][i % 5] for i in range(50)],
+                    "years_experience": [i % 15 for i in range(50)]
+                }
+            elif dataset_choice == "Sales Data":
+                data_dict = {
+                    "month": ["Jan", "Feb", "Mar", "Apr", "May", "Jun"] * 8 + ["Jul", "Aug"],
+                    "sales": [10000 + i * 500 + (i % 10) * 200 for i in range(50)],
+                    "region": [["North", "South", "East", "West"][i % 4] for i in range(50)],
+                    "product": [["Product A", "Product B", "Product C"][i % 3] for i in range(50)]
+                }
+            else:  # Weather Data
+                data_dict = {
+                    "date": [f"2024-01-{str(i+1).zfill(2)}" for i in range(31)] + [f"2024-02-{str(i+1).zfill(2)}" for i in range(19)],
+                    "temperature": [20 + i % 15 + (i % 7) * 2 for i in range(50)],
+                    "humidity": [40 + i % 30 + (i % 5) * 3 for i in range(50)],
+                    "rainfall": [0 if i % 3 == 0 else (i % 10) * 2 for i in range(50)]
+                }
+            
+            # Analyze data
+            result = st.session_state.data_analysis_agent.analyze_dataframe(data_dict, analysis_type)
+            
+            # Store result
+            analysis_data = {
+                'type': 'example_dataset',
+                'dataset': dataset_choice,
+                'analysis_type': analysis_type,
+                'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                'result': result,
+                'config': {
+                    'generate_report': generate_report,
+                    'create_visualizations': create_visualizations,
+                    'perform_quality_check': perform_quality_check
+                }
+            }
+            st.session_state.analysis_results.append(analysis_data)
+            
+            st.success("✅ Analysis completed successfully!")
+            display_analysis_result(analysis_data)
+            
+    except Exception as e:
+        st.error(f"❌ Analysis failed: {str(e)}")
+
+def display_analysis_result(analysis_data: Dict[str, Any]):
+    """Display data analysis result in a formatted way"""
+    result = analysis_data['result']
+    
+    # Summary
+    st.markdown("#### 📋 Analysis Summary")
+    if hasattr(result, 'data_summary') and result.data_summary:
+        summary = result.data_summary
+        
+        # Basic metrics
+        col1, col2, col3, col4 = st.columns(4)
+        with col1:
+            if 'shape' in summary:
+                st.metric("Rows", summary['shape'][0])
+        with col2:
+            if 'shape' in summary:
+                st.metric("Columns", summary['shape'][1])
+        with col3:
+            if 'missing_values' in summary:
+                total_missing = sum(summary['missing_values'].values())
+                st.metric("Missing Values", total_missing)
+        with col4:
+            if 'memory_usage' in summary:
+                st.metric("Memory Usage", f"{summary['memory_usage'] / 1024:.1f} KB")
+    
+    # Insights
+    if hasattr(result, 'insights') and result.insights:
+        st.markdown("#### 💡 Key Insights")
+        for insight in result.insights[:5]:  # Show top 5 insights
+            st.markdown(f"• {insight}")
+    
+    # Visualizations
+    if hasattr(result, 'visualizations') and result.visualizations:
+        st.markdown("#### 📈 Visualizations")
+        cols = st.columns(2)
+        for i, viz_path in enumerate(result.visualizations):
+            if os.path.exists(viz_path):
+                with cols[i % 2]:
+                    st.image(viz_path, caption=os.path.basename(viz_path))
+    
+    # Recommendations
+    if hasattr(result, 'recommendations') and result.recommendations:
+        st.markdown("#### 🎯 Recommendations")
+        for rec in result.recommendations[:3]:  # Show top 3 recommendations
+            st.markdown(f"• {rec}")
+    
+    # Statistical tests
+    if hasattr(result, 'statistical_tests') and result.statistical_tests:
+        with st.expander("📊 Statistical Analysis"):
+            st.json(result.statistical_tests)
+
 def execute_single_scraping(url: str):
     """Execute single URL scraping"""
     try:
@@ -1243,6 +1600,15 @@ def documentation_interface():
     - **Metadata Extraction**: Extract page metadata and SEO information
     - **Intelligent Parsing**: Clean and structure extracted content
     
+    #### 📊 Data Analysis Agent
+    The Data Analysis Agent provides comprehensive data processing and analysis:
+    - **Multi-Format Support**: CSV, Excel, JSON, TSV, and **ATF (Axon Text Format)** files
+    - **Statistical Analysis**: Comprehensive statistical tests and correlations
+    - **Automated Visualizations**: Distribution plots, correlation heatmaps, box plots
+    - **Data Quality Assessment**: Missing values, outliers, data type analysis
+    - **AI-Generated Insights**: Intelligent analysis using LLM integration
+    - **Electrophysiology Data**: Specialized support for ATF files from electrophysiology experiments
+    
     ### 🚀 Getting Started
     
     1. **Initialize Agents**: Use the sidebar to initialize both agents
@@ -1264,6 +1630,8 @@ def documentation_interface():
     - **Market Research**: Competitive analysis and trend identification
     - **Content Analysis**: Website content extraction and analysis
     - **Data Collection**: Systematic web scraping for research purposes
+    - **Scientific Data Analysis**: Process experimental data including electrophysiology recordings (ATF format)
+    - **Laboratory Data Processing**: Analyze and visualize scientific measurements and observations
     
     ### 🛠️ Configuration Options
     

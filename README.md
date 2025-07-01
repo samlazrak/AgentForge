@@ -1,313 +1,403 @@
-# 🤖 Agent Creator
+# 🛠️ AgentForge
 
-**AI-Powered Research & Web Scraping Platform with MLX Integration**
+**The Complete AI Agent Platform for Research, Web Scraping & Data Analysis**
 
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![MLX](https://img.shields.io/badge/MLX-optimized-green.svg)](https://ml-explore.github.io/mlx/)
 [![Streamlit](https://img.shields.io/badge/Streamlit-web_app-red.svg)](https://streamlit.io/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Agent Creator is a comprehensive framework that combines artificial intelligence with advanced web scraping capabilities to create intelligent research assistants. Built with MLX integration for optimized performance on Apple Silicon and featuring a beautiful Streamlit interface.
+AgentForge is a powerful, all-in-one AI agent platform that combines intelligent research, advanced web scraping, and comprehensive data analysis capabilities. Built with MLX optimization for Apple Silicon and featuring a modern Streamlit interface, AgentForge transforms how you interact with data and information.
 
-## ✨ Key Features
+## ✨ What Makes AgentForge Special
 
-🔬 **AI-Powered Research Agent**
-- Comprehensive topic analysis using advanced language models
-- Automated citation generation in academic formats
-- Multi-source information synthesis
-- Professional PDF and Jupyter notebook generation
+🎯 **Three Powerful AI Agents in One Platform**
+- **Research Agent**: AI-powered research with automatic citation generation
+- **Webscraper Agent**: Intelligent web content extraction and analysis  
+- **Data Analysis Agent**: Comprehensive data processing with automated insights
 
-🕷️ **Advanced Webscraper Agent**
-- Both static (requests/BeautifulSoup) and dynamic (Selenium) scraping
-- Intelligent content extraction and metadata collection
-- Batch processing with rate limiting
-- Link and image extraction
+🚀 **Modern Technology Stack**
+- MLX optimization for 3-5x faster AI inference on Apple Silicon
+- Beautiful, responsive Streamlit web interface
+- Extensible architecture with robust error handling
+- Support for multiple data formats including scientific formats
 
-🤝 **Seamless Agent Integration**
-- Research and webscraper agents work together automatically
-- Built-in task management and status monitoring
-- Robust error handling with graceful fallbacks
-- Extensible architecture for new agent types
+🔬 **Scientific & Professional Ready**
+- ATF (Axon Text Format) support for electrophysiology data
+- Academic citation generation and PDF reports
+- Professional visualizations and statistical analysis
+- Enterprise-grade security and reliability
 
-🎨 **Beautiful User Interfaces**
-- Intuitive Streamlit web application
-- Interactive Jupyter notebook demos
-- Clean Python API for developers
-- Real-time progress tracking and analytics
+## 🎯 Core Capabilities
+
+### 🔬 Research Agent
+Transform any research query into comprehensive, cited reports:
+- **Multi-source Analysis**: Searches and analyzes content from multiple sources
+- **AI-Powered Synthesis**: Uses advanced LLMs to synthesize information
+- **Citation Management**: Automatic academic-style citation generation
+- **Professional Outputs**: PDF reports and Jupyter notebooks
+- **Enhanced Extraction**: Integrates with webscraper for deeper content analysis
+
+### 🕷️ Webscraper Agent  
+Extract and analyze web content with intelligence:
+- **Dual-Mode Operation**: Static (fast) and dynamic (Selenium) scraping
+- **Smart Content Extraction**: Intelligent parsing and metadata collection
+- **Batch Processing**: Handle multiple URLs with rate limiting
+- **Media Discovery**: Automatic link and image extraction
+- **Format Flexibility**: Export to multiple formats
+
+### 📊 Data Analysis Agent
+Comprehensive data processing and insights generation:
+- **Multi-Format Support**: CSV, Excel, JSON, TSV, and **ATF files**
+- **Automated Visualizations**: Distribution plots, correlations, box plots
+- **Statistical Analysis**: Advanced statistical tests and interpretations
+- **AI-Generated Insights**: LLM-powered data insights and recommendations
+- **Data Quality Assessment**: Missing values, outliers, and data health checks
+- **Scientific Data Support**: Specialized handling for electrophysiology and laboratory data
 
 ## 🚀 Quick Start
 
 ### Installation
-
 ```bash
-git clone <repository-url>
-cd Agent-Creator
+git clone https://github.com/yourusername/agentforge.git
+cd agentforge
 pip install -r requirements.txt
 ```
 
-### Launch Web Interface
-
+### Launch the Web Interface
 ```bash
 streamlit run app.py
 ```
+Visit `http://localhost:8501` to access the AgentForge platform.
 
-### Basic Python Usage
-
+### Python API Usage
 ```python
-from agent_creator import ResearchAgent
+from agent_creator import ResearchAgent, WebscraperAgent, DataAnalysisAgent
 
-# Initialize and start agent
-agent = ResearchAgent()
-agent.start()
+# Research with AI
+research_agent = ResearchAgent()
+research_agent.start()
 
-# Perform research
-result = agent.research_topic(
-    query="Latest developments in artificial intelligence",
+result = research_agent.research_topic(
+    query="Latest AI developments in healthcare",
     max_results=10,
     generate_pdf=True
 )
 
-print(f"Summary: {result['research_result'].summary}")
-agent.stop()
+# Analyze your data  
+data_agent = DataAnalysisAgent()
+data_agent.start()
+
+analysis = data_agent.analyze_file(
+    "data.csv",
+    analysis_type="comprehensive"
+)
+
+print(f"Found {len(analysis.insights)} key insights")
 ```
 
-## 📚 Documentation
+## 🎮 Web Interface Features
 
-- **[📋 Project Overview](docs/PROJECT_OVERVIEW.md)** - Vision, purpose, and benefits
-- **[🚀 Getting Started](docs/GETTING_STARTED.md)** - Installation and setup guide
-- **[🏗️ Architecture](docs/ARCHITECTURE.md)** - System design and components
-- **[📖 API Reference](docs/API_REFERENCE.md)** - Complete API documentation
-- **[🎯 Examples](docs/EXAMPLES.md)** - Usage examples and tutorials
+### Research Tab
+- **Query Input**: Natural language research queries
+- **Configuration**: Search depth, output formats, enhanced extraction
+- **Real-time Progress**: Live updates during research process
+- **Results Display**: Interactive results with downloadable reports
 
-## 🛠️ Technology Stack
+### Web Scraping Tab
+- **Multiple Modes**: Single URL, batch URLs, link extraction
+- **Advanced Settings**: Timeout, Selenium, content filters
+- **Live Monitoring**: Real-time scraping progress and statistics
+- **Export Options**: Multiple output formats and download options
 
-### Core AI & ML
-- **MLX** (≥0.21.0) - Apple Silicon optimization
-- **HuggingFace Transformers** (≥4.47.0) - Language models
-- **MLX-LM** (≥0.19.0) - MLX language model support
+### Data Analysis Tab
+- **File Upload**: Drag-and-drop support for multiple formats
+- **Manual Entry**: JSON data input for quick analysis
+- **Example Datasets**: Pre-loaded datasets for testing
+- **Instant Insights**: AI-generated insights and recommendations
+- **Interactive Visualizations**: Dynamic charts and statistical plots
 
-### Web Interface & Visualization
-- **Streamlit** (≥1.40.0) - Interactive web application
-- **Jupyter** (≥1.1.0) - Notebook interface
-- **Matplotlib/Seaborn** - Data visualization
+## 📊 Supported Data Formats
 
-### Web Scraping & Research
-- **DuckDuckGo Search** (≥6.1.0) - Web search capabilities
-- **Requests** (≥2.31.0) - HTTP requests
-- **BeautifulSoup** (≥4.12.0) - HTML parsing
-- **Selenium** (≥4.15.0) - Dynamic content scraping
+| Format | Description | Use Case |
+|--------|-------------|----------|
+| **CSV** | Comma-separated values | General data analysis |
+| **Excel** | .xlsx, .xls files | Business and research data |
+| **JSON** | JavaScript Object Notation | API data and web data |
+| **TSV** | Tab-separated values | Scientific and research data |
+| **ATF** | Axon Text Format | Electrophysiology recordings |
 
-### Document Generation
-- **ReportLab** (≥4.0.0) - PDF generation
-- **Python-DOCX** (≥1.1.0) - Word document creation
-- **Markdown** (≥3.5.0) - Markdown processing
+### 🧬 ATF (Axon Text Format) Support
+AgentForge provides specialized support for ATF files commonly used in electrophysiology and neuroscience research:
+- **Metadata Extraction**: Preserves experimental metadata and comments
+- **Intelligent Parsing**: Handles various ATF file structures automatically
+- **Scientific Visualizations**: Specialized plots for time-series data
+- **Integration Ready**: Seamless integration with other analysis tools
+
+## 🏗️ Architecture
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    AgentForge Platform                      │
+├─────────────────────────────────────────────────────────────┤
+│                  Streamlit Web Interface                    │
+│   Research Tab  │  Webscraper Tab  │  Data Analysis Tab    │
+├─────────────────────────────────────────────────────────────┤
+│                     Agent Framework                         │
+│  🔬 Research    │  🕷️ Webscraper   │  📊 Data Analysis    │
+│     Agent       │      Agent       │       Agent          │
+├─────────────────────────────────────────────────────────────┤
+│                    Core Components                          │
+│  BaseAgent  │  AgentConfig  │  TaskManager  │  LLMInterface │
+├─────────────────────────────────────────────────────────────┤
+│                   External Services                         │
+│  MLX/HuggingFace │ DuckDuckGo │ Selenium │ Pandas/Matplotlib │
+└─────────────────────────────────────────────────────────────┘
+```
 
 ## 🎯 Use Cases
 
-### 📚 Academic Research
-- Literature reviews and citation management
-- Multi-source research synthesis
-- Professional report generation
-- Academic writing assistance
+### 🎓 Academic & Research
+- **Literature Reviews**: Comprehensive academic research with citations
+- **Data Analysis**: Process experimental data including electrophysiology
+- **Report Generation**: Professional PDF reports and presentations
+- **Citation Management**: Automatic academic-style references
 
 ### 💼 Business Intelligence
-- Market research and competitive analysis
-- Industry trend monitoring
-- Due diligence investigations
-- Strategic planning support
+- **Market Research**: Competitive analysis and trend monitoring
+- **Content Analysis**: Website content extraction and analysis
+- **Data Processing**: Business metrics and KPI analysis
+- **Due Diligence**: Automated information gathering and analysis
 
-### 📊 Data Collection
-- Automated web scraping pipelines
-- Content monitoring systems
-- News and media analysis
-- Dataset creation and validation
+### 🔬 Scientific Research
+- **Laboratory Data**: Analyze experimental measurements and observations
+- **Electrophysiology**: Specialized ATF file processing and analysis
+- **Research Synthesis**: Multi-source scientific literature analysis
+- **Data Visualization**: Publication-ready scientific plots and charts
 
-### 🔬 Research & Development
-- Technology landscape analysis
-- Patent and prior art research
-- Scientific literature review
-- Innovation trend tracking
+### 📊 Data Science
+- **Exploratory Analysis**: Quick insights from new datasets
+- **Statistical Testing**: Automated statistical analysis and interpretation
+- **Data Quality**: Comprehensive data health and quality assessment
+- **Visualization**: Interactive and publication-ready visualizations
 
-## 🏗️ Architecture Overview
+## 🛠️ Technology Stack
 
-```
-┌─────────────────────────────────────────┐
-│              User Interfaces            │
-│   Streamlit Web App  │  Jupyter Notebooks │
-├─────────────────────────────────────────┤
-│              Agent Framework            │
-│   Research Agent    │   Webscraper Agent │
-├─────────────────────────────────────────┤
-│              Core Framework             │
-│  BaseAgent │ AgentConfig │ AgentTask    │
-├─────────────────────────────────────────┤
-│               Utilities                 │
-│ LLM Interface │ Search │ Document Gen   │
-├─────────────────────────────────────────┤
-│           External Dependencies         │
-│   MLX │ Transformers │ Selenium │ etc. │
-└─────────────────────────────────────────┘
-```
+### AI & Machine Learning
+- **MLX** (≥0.21.0) - Apple Silicon optimized AI inference
+- **HuggingFace Transformers** (≥4.47.0) - Advanced language models
+- **Pandas** (≥2.0.0) - Data manipulation and analysis
+- **NumPy** & **SciPy** - Scientific computing and statistics
+
+### Data Analysis & Visualization  
+- **Matplotlib** & **Seaborn** - Statistical visualizations
+- **Plotly** - Interactive charts and dashboards
+- **Scikit-learn** - Machine learning and statistical analysis
+
+### Web Technologies
+- **Streamlit** (≥1.40.0) - Modern web interface
+- **Requests** & **BeautifulSoup** - Web scraping
+- **Selenium** (≥4.15.0) - Dynamic content extraction
+
+### Document Generation
+- **ReportLab** (≥4.0.0) - PDF generation
+- **Jupyter** (≥1.1.0) - Interactive notebooks
+- **Markdown** - Document formatting
 
 ## 🚀 Performance Features
 
 ### MLX Optimization
-- **3-5x faster** AI inference on Apple Silicon
-- Optimized memory usage for large models
-- Automatic fallback for non-Apple hardware
+- **3-5x faster** AI inference on Apple Silicon M1/M2/M3
+- **Memory efficient** processing for large datasets
+- **Automatic fallback** for non-Apple hardware
 
 ### Intelligent Processing
-- Parallel web scraping and content analysis
-- Automatic rate limiting and retry logic
-- Memory-efficient content handling
-- Batch processing capabilities
+- **Parallel operations** for web scraping and analysis
+- **Automatic rate limiting** and retry mechanisms
+- **Streaming data processing** for large files
+- **Batch operations** for efficiency
 
-### Robust Error Handling
-- Graceful degradation when dependencies missing
-- Comprehensive retry mechanisms
-- Detailed error reporting and recovery
-- Fallback to mock data for testing
+### Enterprise Ready
+- **Robust error handling** with graceful degradation
+- **Comprehensive logging** for debugging and monitoring
+- **Secure file handling** with temporary file cleanup
+- **Resource optimization** for production environments
 
-## 🔧 Configuration
+## 📚 Documentation
 
-### Research Agent Setup
-```python
-from agent_creator.core.base_agent import AgentConfig
-
-config = AgentConfig(
-    name="MyResearchAgent",
-    description="Custom research agent",
-    capabilities=["web_search", "content_analysis"],
-    max_retries=3,
-    timeout=30
-)
-```
-
-### Webscraper Configuration
-```python
-from agent_creator.agents.webscraper_agent import ScrapingConfig
-
-scraping_config = ScrapingConfig(
-    timeout=30,
-    delay_between_requests=1.0,
-    use_selenium=False,
-    max_content_length=1000000
-)
-```
+| Document | Description |
+|----------|-------------|
+| **[Getting Started](docs/GETTING_STARTED.md)** | Installation and first steps |
+| **[API Reference](docs/API_REFERENCE.md)** | Complete API documentation |
+| **[Architecture](docs/ARCHITECTURE.md)** | System design and components |
+| **[Examples](docs/EXAMPLES.md)** | Usage examples and tutorials |
+| **[Project Overview](docs/PROJECT_OVERVIEW.md)** | Vision and features |
 
 ## 🧪 Examples
 
-### Research with Citations
+### Research with Enhanced Content Extraction
 ```python
-from agent_creator import ResearchAgent
+from agent_creator import ResearchAgent, WebscraperAgent
 
-agent = ResearchAgent()
-agent.start()
+# Create and connect agents
+research_agent = ResearchAgent()
+webscraper_agent = WebscraperAgent()
+research_agent.set_webscraper_agent(webscraper_agent)
 
-result = agent.research_topic(
-    query="Climate change impacts on biodiversity",
+# Start agents
+research_agent.start()
+webscraper_agent.start()
+
+# Perform enhanced research
+result = research_agent.research_topic(
+    query="Machine learning in drug discovery",
     max_results=15,
     generate_pdf=True,
     generate_notebook=True
 )
 
-print(f"Sources: {len(result['research_result'].sources)}")
-print(f"Citations: {len(result['research_result'].citations)}")
-print(f"Files: {result['files_generated']}")
-
-agent.stop()
+print(f"Generated {len(result['files_generated'])} files")
+print(f"Analyzed {len(result['research_result'].sources)} sources")
 ```
 
-### Advanced Web Scraping
+### Data Analysis with ATF Files
+```python
+from agent_creator import DataAnalysisAgent
+
+# Analyze electrophysiology data
+data_agent = DataAnalysisAgent()
+data_agent.start()
+
+# Process ATF file
+result = data_agent.analyze_file(
+    "experiment_data.atf",
+    analysis_type="comprehensive"
+)
+
+print(f"Data shape: {result.data_summary['shape']}")
+print(f"Generated {len(result.visualizations)} visualizations")
+print(f"Key insights: {len(result.insights)}")
+
+# Access AI-generated insights
+for insight in result.insights:
+    print(f"• {insight}")
+```
+
+### Batch Web Scraping
 ```python
 from agent_creator import WebscraperAgent
 
 agent = WebscraperAgent()
 agent.start()
 
-# Single URL
-result = agent.scrape_url("https://example.com")
-print(f"Title: {result.title}")
-print(f"Content: {len(result.text)} characters")
+# Scrape multiple URLs
+urls = [
+    "https://example1.com",
+    "https://example2.com", 
+    "https://example3.com"
+]
 
-# Multiple URLs
-urls = ["https://site1.com", "https://site2.com"]
 results = agent.scrape_multiple_urls(urls)
-print(f"Scraped {len(results)} sites")
 
-agent.stop()
-```
-
-### Integrated Research
-```python
-from agent_creator import ResearchAgent, WebscraperAgent
-
-research_agent = ResearchAgent()
-webscraper_agent = WebscraperAgent()
-
-# Connect for enhanced functionality
-research_agent.set_webscraper_agent(webscraper_agent)
-
-research_agent.start()
-webscraper_agent.start()
-
-# Enhanced research with deep content extraction
-result = research_agent.research_topic(
-    query="Machine learning trends 2024",
-    max_results=8
-)
-
-research_agent.stop()
-webscraper_agent.stop()
+for result in results:
+    if result.success:
+        print(f"Scraped: {result.url}")
+        print(f"Content: {len(result.text)} characters")
+        print(f"Links: {len(result.links)}")
 ```
 
 ## 🧪 Testing
 
-Run the test suite:
+Run the comprehensive test suite:
 ```bash
+# Run all tests
 pytest tests/
-```
 
-Run specific tests:
-```bash
+# Run specific agent tests
 pytest tests/test_research_agent.py
-pytest tests/test_webscraper_agent.py
+pytest tests/test_webscraper_agent.py  
+pytest tests/test_data_analysis_agent.py
+
+# Run with coverage
+pytest --cov=agent_creator tests/
 ```
 
-## 🔄 Project Status
+## 🚀 Deployment
 
-### Current Version: 1.0.0
-- ✅ Core agent framework
-- ✅ Research agent with AI integration
-- ✅ Webscraper agent with dual-mode operation
-- ✅ Streamlit web interface
-- ✅ Jupyter notebook demos
-- ✅ Comprehensive documentation
+### Local Development
+```bash
+git clone https://github.com/yourusername/agentforge.git
+cd agentforge
+pip install -e .
+streamlit run app.py
+```
 
-### Upcoming Features
-- 🔄 Enhanced UI/UX improvements
-- 🔄 RESTful API gateway
-- 🔄 Docker containerization
-- 🔄 Advanced analytics dashboard
+### Production Deployment
+```bash
+# Install production dependencies
+pip install -r requirements.txt
+
+# Set environment variables
+export STREAMLIT_SERVER_PORT=8501
+export STREAMLIT_SERVER_ADDRESS=0.0.0.0
+
+# Launch with optimized settings
+streamlit run app.py --server.headless true
+```
+
+### Docker (Coming Soon)
+```bash
+docker build -t agentforge .
+docker run -p 8501:8501 agentforge
+```
 
 ## 🤝 Contributing
 
-We welcome contributions! Please see our contributing guidelines:
-
-1. **Fork the repository**
-2. **Create a feature branch** (`git checkout -b feature/amazing-feature`)
-3. **Commit your changes** (`git commit -m 'Add amazing feature'`)
-4. **Push to the branch** (`git push origin feature/amazing-feature`)
-5. **Open a Pull Request**
+We welcome contributions from the community! Here's how to get started:
 
 ### Development Setup
 ```bash
-git clone <repository-url>
-cd Agent-Creator
+git clone https://github.com/yourusername/agentforge.git
+cd agentforge
 pip install -e .
-pip install -r requirements.txt
 pip install pytest pytest-asyncio pytest-mock pytest-cov
 ```
+
+### Contributing Process
+1. **Fork** the repository
+2. **Create** a feature branch (`git checkout -b feature/amazing-feature`)
+3. **Make** your changes with tests
+4. **Run** the test suite (`pytest`)
+5. **Commit** your changes (`git commit -m 'Add amazing feature'`)
+6. **Push** to your branch (`git push origin feature/amazing-feature`)
+7. **Open** a Pull Request
+
+### Development Guidelines
+- Write comprehensive tests for new features
+- Follow PEP 8 style guidelines
+- Add docstrings to all public functions
+- Update documentation for new features
+
+## 📋 Roadmap
+
+### Current Version: 1.0.0
+- ✅ Three-agent platform (Research, Webscraper, Data Analysis)
+- ✅ Streamlit web interface with modern design
+- ✅ MLX optimization for Apple Silicon
+- ✅ ATF file support for scientific data
+- ✅ Comprehensive documentation and tests
+
+### Version 1.1.0 (Next Release)
+- 🔄 RESTful API for programmatic access
+- 🔄 Docker containerization for easy deployment
+- 🔄 Enhanced data visualization dashboard
+- 🔄 User authentication and project management
+
+### Version 1.2.0 (Future)
+- 🔄 Plugin system for custom agents
+- 🔄 Cloud deployment templates
+- 🔄 Advanced analytics and reporting
+- 🔄 Integration with popular data platforms
 
 ## 📄 License
 
@@ -315,30 +405,43 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
-- **MLX Team** - For the excellent MLX framework
-- **Streamlit** - For the amazing web app framework
-- **HuggingFace** - For democratizing access to language models
-- **Open Source Community** - For all the wonderful libraries
+- **MLX Team** - For outstanding Apple Silicon optimization
+- **Streamlit** - For the incredible web framework
+- **HuggingFace** - For democratizing AI access
+- **Scientific Community** - For inspiring the ATF support
+- **Open Source Contributors** - For making this possible
 
-## 📞 Support
+## 📞 Support & Community
 
-For questions, issues, or feature requests:
+### Get Help
+- 📚 **Documentation**: Comprehensive guides and API reference
+- 🔍 **Issues**: Search existing issues or create new ones
+- 💬 **Discussions**: Join community discussions
+- 📧 **Contact**: Reach out for enterprise support
 
-1. 📚 Check the [documentation](docs/)
-2. 🔍 Search existing [issues](../../issues)
-3. 🆕 Create a new [issue](../../issues/new)
-4. 💬 Join our community discussions
+### Stay Updated
+- ⭐ **Star** this repository to show support
+- 👀 **Watch** for updates and new releases
+- 🍴 **Fork** to contribute or customize
+- 📢 **Share** with your colleagues and friends
 
-## 📊 Statistics
+## 📊 Project Statistics
 
 - **Languages**: Python 3.8+
-- **Dependencies**: 40+ carefully selected packages
+- **Dependencies**: 40+ carefully selected packages  
 - **Test Coverage**: 85%+ comprehensive test suite
 - **Documentation**: 100% API coverage
 - **Performance**: 3-5x faster with MLX optimization
+- **File Formats**: 5+ supported data formats including ATF
 
 ---
 
-**Built with ❤️ and powered by AI** | **Made for researchers, by researchers**
+<div align="center">
 
-*Agent Creator - Transforming how we gather and analyze information in the AI age.*
+**🛠️ Built with passion for researchers, scientists, and data enthusiasts**
+
+**AgentForge** - *Forging the future of AI-powered information processing*
+
+[⚡ Get Started](docs/GETTING_STARTED.md) • [📖 Documentation](docs/) • [🤝 Contribute](#-contributing) • [📞 Support](#-support--community)
+
+</div>
